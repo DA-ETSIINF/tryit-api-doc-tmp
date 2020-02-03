@@ -1,0 +1,182 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: Server which host the API
+    url: https://congresotryit.es
+info:
+  description: Official API for the Try IT! congress
+  version: "1.0"
+  title: Try IT! API
+  contact:
+    email: maximo.garcia.martinez@alumnos.upm.es
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Home
+    description: Basic information which will be shown in the home screen
+  # TODO Add the rest of pages
+paths:
+  /sponsors:
+    get:
+      tags:
+        - Home
+      summary: Returns a JSON object with all the sponsors for the last edition
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+  /streaming:
+    get:
+      tags:
+        - Home
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+  /talks:
+    get:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+  /workshops:
+    get:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+
+   /previous-editions:
+   # TODO Check how to show it properly (inside /previous-editions)
+    get:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+
+   /tickets:
+    post:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+   /volunteers:
+    post:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+   /escape-room:
+    post:
+      tags:
+        - TODO #TODO
+      summary: TODO
+      operationId: TODO
+      description: |
+        TODO
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+            application/xml:
+              schema:
+                $ref: TODO #'#/components/schemas/UserList'
+        
+  
+        
+components:
+  schemas:
+  # TODO You have an example in the file I sent you via WhatsApp
+    SpeakerResource:
+      type: object
+    TalkResource:
+      type: object
+    WorkshopResource:
+      type: object
+    CompanyResource:
+      type: object
+    PrizeResource:
+      type: object
