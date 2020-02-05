@@ -101,23 +101,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/EditionsResource"
 
-  /previous-editions:
-    # TODOs Check how to show it properly (inside /previous-editions)
-    get:
-      tags:
-        - TODOs #TODOs
-      summary: TODOs
-      operationId: TODOs
-      description: |
-        TODOs
-      responses:
-        "200":
-          description: TODOs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TalkResource"
-
   /tickets:
     post:
       tags:
