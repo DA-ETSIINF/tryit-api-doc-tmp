@@ -11,15 +11,11 @@ info:
     email: maximo.garcia.martinez@alumnos.upm.es
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Home
-    description: Basic information which will be shown in the home screen
-  - name: Talks
-    description: TODO
-  - name: Workshops
-    description: TODO
-  - name: Previous-editions
+    description: Basic information which will be used in the home screen
+  - name: Events
     description: TODOs
   - name: Tickets
     description: TODOs
@@ -39,62 +35,74 @@ paths:
       description: |
         TODOs
       responses:
-        '200':
+        "200":
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpeakerResource'
+                $ref: "#/components/schemas/SpeakerResource"
   /streaming:
     get:
       tags:
         - Home
-      summary:  Returns a JSON object with the streaming information
+      summary: Returns a JSON object with the streaming information
       operationId: getStreaming
       description: |
         TODOs
       responses:
-        '200':
+        "200":
           description: TODOs
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StreamingResource'
-  /talks:
+                $ref: "#/components/schemas/StreamingResource"
+  /events:
     get:
       tags:
-        - Talk
-      summary: Returns a JSON object with the Talk Information
+        - Events
+      summary: Returns a JSON object with all the talks and workshops
       operationId: getTalks
       description: |
-        TODOs
+        Returns the information of the talks and the workshops of the last editions or all of the editions. If a edition is not specify, it will return the current edition by default.
+      parameters:
+        - in: query
+          name: edition
+          description: Allow to specify if the response should have the information of the current edition or the information of all of the editions. It should contain "all" or "current".
+          required: false
+          schema:
+            type: string
       responses:
-        '200':
-          description: TODOs
+        "200":
+          description: OK - Response using edition="current" or empty edition parameter
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TalkResource'
-  /workshops:
+                $ref: "#/components/schemas/EditionResource"
+  /events?edition=all:
     get:
       tags:
-        - TODOs #TODOs
-      summary: TODOs
-      operationId: TODOs
+        - Events
+      summary: Returns a JSON object with all the talks and workshops
+      operationId: getTalks
       description: |
-        TODOs
+        Returns the information of the talks and the workshops of the last editions or all of the editions. If a edition is not specify, it will return the current edition by default.
+      parameters:
+        - in: query
+          name: edition
+          description: Allow to specify if the response should have the information of the current edition or the information of all of the editions. It should contain "all" or "current".
+          required: false
+          schema:
+            type: string
       responses:
-        '200':
-          description: TODOs
+        "200":
+          description: OK - Response using edition="all"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpeakerResource'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SpeakerResource'
+                $ref: "#/components/schemas/EditionsResource"
+
   /previous-editions:
-   # TODOs Check how to show it properly (inside /previous-editions)
+    # TODOs Check how to show it properly (inside /previous-editions)
     get:
       tags:
         - TODOs #TODOs
@@ -103,12 +111,12 @@ paths:
       description: |
         TODOs
       responses:
-        '200':
+        "200":
           description: TODOs
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionsResource'
+                $ref: "#/components/schemas/TalkResource"
 
   /tickets:
     post:
@@ -119,12 +127,12 @@ paths:
       description: |
         Sends the information of the form filled by the user to the server in order to create a new ticket and send him the email with the ticket
       responses:
-        '201':
+        "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TicketResource'
+                $ref: "#/components/schemas/TicketResource"
   /volunteers:
     post:
       tags:
@@ -134,89 +142,68 @@ paths:
       description: |
         Sends the information of the form filled by the user to the server in order to create a new volunteer in the database. The user must have a ticket first. The backend will use personal id to make a relation between ticket and volunteer.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpeakerResource'
-        '400':
+                $ref: "#/components/schemas/VolunteerResource"
+        "400":
           description: The user must create a ticket first
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpeakerResource'
+                $ref: "#/components/schemas/WithAnInvalidTicketResource"
   /escape-room:
-    post:
+    get:
       tags:
-        - TODOs #TODOs
-      summary: TODOs
-      operationId: TODOs
+        - Escape-room
+      summary: Returns the list of available sessions for participate
+      operationId: getEscapeRoom
       description: |
-        TODOs
+        Returns a list with all the slots available and the number of people already registered so, the user can see how much room left it has.
       responses:
-        '200':
-          description: TODOs
+        "200":
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpeakerResource'
-        
-  
-        
+                $ref: "#/components/schemas/EscapeRoomPostResource"
+        "400":
+          description: The user must create a ticket first
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WithAnInvalidTicketResource"
+    post:
+      tags:
+        - Escape-room
+      summary: Register a user to one of the sessions for the Escape Room
+      operationId: TODOs
+      description: |
+        Sends the information of the user which want to join one of the sessions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EscapeRoomPostResource"
+
 components:
   schemas:
-  # TODOs You have an example in the file I sent you via WhatsApp
+    # TODOs You have an example in the file I sent you via WhatsApp
     SpeakerResource:
       type: object
       required:
         - userId
-        - name
-        - username
-        - email
-        - createdAt
-        - updatedAt
       properties:
         userId:
           type: integer
           format: id
           example: 92147
-        username:
-          type: string
-          example: iron_man
-        name:
-          type: string
-          example: Iron Man
-        email:
-          type: string
-          format: email
-          example: contact@ironman.com
-        createdAt:
-          type: string
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2018-10-29T10:03:56.127Z'
-        biography:
-          type: string
-        location:
-          type: string
-          format: url
-          example: 'https://api.faceSOS.com/user/92147'
-        friendsLocation:
-          type: string
-          format: url
-          example: 'https://api.faceSOS.com/user/92147/friends'
-    TalkResource:
-      type: object
-    WorkshopResource:
-      type: object
-    CompanyResource:
-      type: object
-    PrizeResource:
-      type: object
+
+    # TICKET
     TicketResource:
       type: object
       required:
@@ -235,7 +222,7 @@ components:
           example: Man The Best
         personal_id:
           type: string
-          pattern: '[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]'
+          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
           example: Man The Best
         email:
           type: string
@@ -261,6 +248,84 @@ components:
         phone:
           type: string
           example: "957762888"
+    # END TICKET
+
+    WithAnInvalidTicketResource:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          minimum: 400
+          maximum: 400
+          example: 400
+        string:
+          type: string
+          example: The user must have a ticket for the current edition
+
+    AvailabilityResource:
+      type: object
+      required:
+        - date
+        - time_period
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2020-10-29T10:03:56.127Z"
+        time_period:
+          type: string
+          example: Morning
+
+    # VOLUNTEERS
+    VolunteerResource:
+      type: object
+      required:
+        - availability
+        - personal_id
+      properties:
+        availability:
+          type: array
+          items:
+            $ref: "#/components/schemas/AvailabilityResource"
+        personal_id:
+          type: string
+          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
+          example: Man The Best
+    # END VOLUNTEERS
+
+    # ESCAPE ROOM
+    EscapeRoomGetResource:
+      type: array
+      items:
+        type: object
+        required:
+          - date
+          - n_registered
+        properties:
+          date:
+            type: string
+            format: date
+            example: "2020-10-29T10:03:56.127Z"
+          n_registered:
+            type: integer
+            minimum: 0
+            example: 2
+    EscapeRoomPostResource:
+      type: object
+      required:
+        - availability
+        - personal_id
+      properties:
+        availability:
+          $ref: "#/components/schemas/AvailabilityResource"
+        personal_id:
+          type: string
+          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
+          example: Man The Best
+    # END ESCAPE ROOM
 
     StreamingResource:
       type: object
@@ -268,56 +333,85 @@ components:
         - title
         - url
       properties:
-        title: 
+        title:
           type: string
           example: Captain America TED Talk
         url:
           type: string
           format: url
-          example: 'https://www.ted.com/talks/captain_america_TED_talk' 
-    
+          example: "https://www.ted.com/talks/captain_america_TED_talk"
+
+    EditionsResource:
+      type: array
+      items:
+        $ref: "#/components/schemas/EditionResource"
+
+    EditionResource:
+      type: object
+      required:
+        - events
+        - year
+      properties:
+        year:
+          type: integer
+          example: 2020
+        events:
+          type: object
+          required:
+            - talks
+            - workshops
+          properties:
+            talks:
+              $ref: "#/components/schemas/TalkResource"
+            workshops:
+              $ref: "#/components/schemas/WorkshopResource"
     TalkResource:
       type: object
       required:
-      - title
-      - description
-      - url
-      - video 
-      - date
-      - slide
-      - room
-      - prize
-      - speaker
+        - title
+        - description
+        - url
+        - video
+        - date
+        - slide
+        - room
+        - prize
+        - speaker
       properties:
-      title:
-        type: string
-        example: How to do IT stuff
-      description:
-        type: string
-        example: Yes another talk about IT, amazing
-      url: 
-        type: string
-        format: url
-        example: 'https://www.ted.com/talks/captain_america_TED_talk'
-      video:
-        type: string
-        format: url
-        example: 'https://www.youtube.com/watch?v=hHW1oY26kxQtalk'
-      date:
-        type: string
-        format: date
-        example: '2018-10-29T10:03:56.127Z'
-      slide:
-        type: string # VERIFY
-        format: url
-        example: 'https://slide_url'
-      room:
-        type: string
-        example: dark room
-      prize:
-        type: string
-        example: one bottle of minttu
-      speaker:
-        type: string
-        example: Sweet Dady Victor Nieves <3
-
+        title:
+          type: string
+          example: How to do IT stuff
+        description:
+          type: string
+          example: Yes another talk about IT, amazing
+        url:
+          type: string
+          format: url
+          example: "https://www.ted.com/talks/captain_america_TED_talk"
+        video:
+          type: string
+          format: url
+          example: "https://www.youtube.com/watch?v=hHW1oY26kxQtalk"
+        date:
+          type: string
+          format: date
+          example: "2018-10-29T10:03:56.127Z"
+        slide:
+          type: string # VERIFY
+          format: url
+          example: "https://slide_url"
+        room:
+          type: string
+          example: dark room
+        prize:
+          type: string
+          example: one bottle of minttu
+        speaker:
+          type: string
+          example: Sweet Dady Victor Nieves <3
+    WorkshopResource:
+      type: object
+    CompanyResource:
+      type: object
+    PrizeResource:
+      type: object
