@@ -1,5 +1,4 @@
 openapi: 3.0.0
-# Added by API Auto Mocking Plugin
 servers:
   - description: Server which host the API
     url: https://congresotryit.es
@@ -14,17 +13,17 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Home
-    description: Basic information which will be used in the home screen
+    description: Basic information which will be used in the home screen.
   - name: Events
-    description: TODOs
+    description: Information about the past editions of the congress.
   - name: Tickets
-    description: TODOs
+    description: Page with a form that allow users to generate tickets.
   - name: Volunteers
-    description: TODOs
+    description: Pagewit a form that allow users with tickets to be part of the staff of the congress.
   - name: Escape-room
-    description: TODOs
-  - name: Check-for-ects
-    description: TODOs
+    description: Page with a form that allow users to join one of the session of the escape room.
+  - name: ECTS
+    description: Page with a form that allow users to check how many ects they will earn.
 paths:
   /sponsors:
     get:
@@ -33,14 +32,14 @@ paths:
       summary: Returns a JSON object with all the sponsors for the last edition
       operationId: getSponsors
       description: |
-        TODOs
+        Returns the information of all the sponsors in the current edition. Sponsors will be classify by type of sponsorships
       responses:
         "200":
-          description: Ok
+          description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SpeakerResource"
+                $ref: "#/components/schemas/SponsorsResource"
   /streaming:
     get:
       tags:
@@ -56,6 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StreamingResource"
+
   /events:
     get:
       tags:
@@ -78,6 +78,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionResource"
+                
   /events?edition=all:
     get:
       tags:
@@ -116,6 +117,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TicketResource"
+
   /volunteers:
     post:
       tags:
@@ -136,7 +138,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WithAnInvalidTicketResource"
+                $ref: "#/components/schemas/InvalidTicketResource"
+
   /escape-room:
     get:
       tags:
@@ -151,18 +154,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EscapeRoomPostResource"
-        "400":
-          description: The user must create a ticket first
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WithAnInvalidTicketResource"
+                $ref: "#/components/schemas/EscapeRoomGetResource"    
     post:
       tags:
         - Escape-room
       summary: Register a user to one of the sessions for the Escape Room
-      operationId: TODOs
+      operationId: postEscapeRoom
       description: |
         Sends the information of the user which want to join one of the sessions
       responses:
@@ -172,20 +169,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EscapeRoomPostResource"
+        "400":
+          description: The user must create a ticket first
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidTicketResource"
+
+  /ects:
+    tags: 
+      - ECTS
+    summary: Check the number of ECTS earned in all the editions of the congress.
+    operationID: getAttendance
+    parameters:
+        - in: query
+          name: edition
+          description: Edition that we want to see the ECTS.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: personal_id
+          description: Personal ID used by the user when the ticket was created
+          required: true
+          schema:
+            type: string
+    description: |
+        Get the information about the ects earned by the student.
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ECTSResource"
 
 components:
   schemas:
-    # TODOs You have an example in the file I sent you via WhatsApp
-    SpeakerResource:
-      type: object
-      required:
-        - userId
-      properties:
-        userId:
-          type: integer
-          format: id
-          example: 92147
-
     # TICKET
     TicketResource:
       type: object
@@ -206,7 +226,7 @@ components:
         personal_id:
           type: string
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
-          example: Man The Best
+          example: 00112233K
         email:
           type: string
           format: email
@@ -233,7 +253,7 @@ components:
           example: "957762888"
     # END TICKET
 
-    WithAnInvalidTicketResource:
+    InvalidTicketResource:
       type: object
       required:
         - status
@@ -248,7 +268,7 @@ components:
           type: string
           example: The user must have a ticket for the current edition
 
-    AvailabilityResource:
+    TimePeriodsResource:
       type: object
       required:
         - date
@@ -266,13 +286,13 @@ components:
     VolunteerResource:
       type: object
       required:
-        - availability
+        - time_periods
         - personal_id
       properties:
-        availability:
+        time_periods:
           type: array
           items:
-            $ref: "#/components/schemas/AvailabilityResource"
+            $ref: "#/components/schemas/TimePeriodsResource"
         personal_id:
           type: string
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
@@ -296,33 +316,94 @@ components:
             type: integer
             minimum: 0
             example: 2
+            
     EscapeRoomPostResource:
       type: object
       required:
-        - availability
+        - time_period
         - personal_id
       properties:
-        availability:
-          $ref: "#/components/schemas/AvailabilityResource"
+        time_period:
+          $ref: "#/components/schemas/TimePeriodsResource"
         personal_id:
           type: string
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
           example: Man The Best
     # END ESCAPE ROOM
-
+    
     StreamingResource:
       type: object
       required:
         - title
         - url
+        - streaming
       properties:
         title:
           type: string
           example: Captain America TED Talk
         url:
           type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.ted.com/talks/captain_america_TED_talk"
+        streaming:
+          type: bool
+          example: True
+
+    # EVENTS
+    # SPEAKER
+    SpeakerResource:
+      type: object
+      required:
+        - name
+        - image
+        - bio
+        - company
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        image:
+          type: string
+        web:
+          type: string
+        company:
+          $ref: "#/components/schemas/CompanyResource"
+        social_media:
+          type: object
+          properties:
+            twitter:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://twitter.com/IronMan"
+            facebook:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://facebook.com/IronMan"
+            linkedin:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://linkedin.com/IronMan"
+            google_plus:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://google_plus.com/IronMan"
+            github:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://github.com/IronMan"
+            gitlab:
+              type: string
+              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+              format: url
+              example: "https://gitlab.com/IronMan"
+    # END SPEAKER
 
     EditionsResource:
       type: array
@@ -348,6 +429,8 @@ components:
               $ref: "#/components/schemas/TalkResource"
             workshops:
               $ref: "#/components/schemas/WorkshopResource"
+    
+    # TALKS
     TalkResource:
       type: object
       required:
@@ -370,11 +453,13 @@ components:
         url:
           type: string
           format: url
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           example: "https://www.ted.com/talks/captain_america_TED_talk"
         video:
           type: string
           format: url
-          example: "https://www.youtube.com/watch?v=hHW1oY26kxQtalk"
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          example: "https://www.youtube.com/watch?v=ANOTHERONE"
         date:
           type: string
           format: date
@@ -382,19 +467,158 @@ components:
         slide:
           type: string # VERIFY
           format: url
-          example: "https://slide_url"
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          example: "https://slide_url.com"
         room:
           type: string
           example: dark room
         prize:
-          type: string
-          example: one bottle of minttu
+          $ref: "#/components/schemas/PrizeResource"
         speaker:
-          type: string
-          example: Sweet Dady Victor Nieves <3
+          $ref: "#/components/schemas/SpeakerResource"
+    # END TALKS
+
+    # WORKSHOPS
     WorkshopResource:
       type: object
+      required: 
+        - name
+        - description
+        - speaker
+        - company
+        - room
+        - date
+      properties:
+        name: 
+          type: string
+          example: How to program in 68k assembler 
+        description:
+          type: string
+          example: You will never approve computer architecture 
+        speaker:
+          $ref: "#/components/schemas/SpeakerResource"
+        company:
+          $ref: "#/components/schemas/CompanyResource"
+        room:
+          type: string
+          example: Wellington or Peralta
+        date: 
+          type: string
+          format: date
+          example: "2018-10-29T10:03:56.127Z"
+    # END WORKSHOPS
+    
+
     CompanyResource:
       type: object
+      required:
+        - name
+        - sponsorType
+        - logo
+        - talks
+        - email
+        - contact_phone
+      properties:
+        name: 
+          type: string
+          example: Some random IT company
+        sponsorType:
+          $ref: "#/components/schemas/SponsorsResource"
+        logo:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.images.com/iron_man"
+        talks: 
+          $ref: "#/components/schemas/TalkResource"
+        email:
+          type: string
+          format: email
+          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
+          example: some_name@company.es
+        contact_phone:
+          type: string
+          example: "957762888"
+
+          
+          
+    #  END EVENTS
+
+
+    # PRIZE
     PrizeResource:
       type: object
+      required:
+        - name
+        - description
+        - image
+      properties:
+        name: 
+          type: string
+          example: Minttu
+        description: 
+          type: string
+          example: One full bottle of minttu
+        image:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.images.com/iron_man"
+    # END PRIZE
+    
+     
+    # SPONSORS
+    SponsorsResource:
+      type: object
+      required:
+        - category
+        - sponsors
+      properties:
+        type:
+          category: string
+          pattern: "bronce | plata | oro | platino"
+          example: oro
+        sponsors:
+          type: array
+          items:
+            $ref: "#/components/schemas/SponsorResource"
+            
+    SponsorResource:
+      type: object
+      required:
+        - name
+        - logo
+      properties:
+        name:
+          type: string
+          example: Los Vengadores
+        logo:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.images.com/iron_man"
+    # END SPONSORS
+
+    ECTSResource:
+      type: object
+      required:
+        - edition
+        - ntalks
+        - talks
+        - first_day_of_event
+      properties:
+        edition:
+          $ref: "#/components/schemas/EditionResource"
+        ntalks:
+          type: integer
+          example: 27
+          minimum: 1
+        talks:
+          $ref: "#/components/schemas/TalkResource"
+        first_day_of_event:
+          type: string
+          format: date
+          
+          
+        
+
