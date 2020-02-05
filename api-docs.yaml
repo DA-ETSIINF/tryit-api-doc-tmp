@@ -19,11 +19,11 @@ tags:
   - name: Tickets
     description: Page with a form that allow users to generate tickets.
   - name: Volunteers
-    description: Pagewit a form that allow users with tickets to be part of the staff of the congress.
+    description: Page with a form that allow users with tickets to be part of the staff of the congress.
   - name: Escape-room
     description: Page with a form that allow users to join one of the session of the escape room.
   - name: ECTS
-    description: Page with a form that allow users to check how many ects they will earn.
+    description: Page with a form that allow users to check how many ECTS they will earn.
 paths:
   /sponsors:
     get:
@@ -47,10 +47,10 @@ paths:
       summary: Returns a JSON object with the streaming information
       operationId: getStreaming
       description: |
-        TODOs
+        Returns the information about the streaming status and if the congress is on live, reply with the url
       responses:
         "200":
-          description: TODOs
+          description: OK
           content:
             application/json:
               schema:
@@ -78,7 +78,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionResource"
-                
+
   /events?edition=all:
     get:
       tags:
@@ -154,7 +154,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EscapeRoomGetResource"    
+                $ref: "#/components/schemas/EscapeRoomGetResource"
     post:
       tags:
         - Escape-room
@@ -177,14 +177,17 @@ paths:
                 $ref: "#/components/schemas/InvalidTicketResource"
 
   /ects:
-    tags: 
-      - ECTS
-    summary: Check the number of ECTS earned in all the editions of the congress.
-    operationID: getAttendance
-    parameters:
+    post:
+      tags:
+        - ECTS
+      summary: Check the number of ECTS earned in all the editions of the congress.
+      operationId: getECTS
+      description: |
+        The student can check the number of ECTS earned in all the editions of the congress. At maximum of 2ECTS.
+      parameters:
         - in: query
           name: edition
-          description: Edition that we want to see the ECTS.
+          description: Edition which user wants to know how many ECTS he/she earned
           required: true
           schema:
             type: string
@@ -194,15 +197,15 @@ paths:
           required: true
           schema:
             type: string
-    description: |
-        Get the information about the ects earned by the student.
-    responses:
-      "200":
-        description: OK
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ECTSResource"
+      description: |
+        Get the information about the ECTS earned by the student.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ECTSResource"
 
 components:
   schemas:
@@ -211,7 +214,7 @@ components:
       type: object
       required:
         - name
-        - lastnames
+        - lastname
         - personal_id
         - email
         - is_student
@@ -220,7 +223,7 @@ components:
         name:
           type: string
           example: Iron
-        lastnames:
+        lastname:
           type: string
           example: Man The Best
         personal_id:
@@ -316,7 +319,7 @@ components:
             type: integer
             minimum: 0
             example: 2
-            
+
     EscapeRoomPostResource:
       type: object
       required:
@@ -330,7 +333,7 @@ components:
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
           example: Man The Best
     # END ESCAPE ROOM
-    
+
     StreamingResource:
       type: object
       required:
@@ -429,7 +432,7 @@ components:
               $ref: "#/components/schemas/TalkResource"
             workshops:
               $ref: "#/components/schemas/WorkshopResource"
-    
+
     # TALKS
     TalkResource:
       type: object
@@ -481,7 +484,7 @@ components:
     # WORKSHOPS
     WorkshopResource:
       type: object
-      required: 
+      required:
         - name
         - description
         - speaker
@@ -489,12 +492,12 @@ components:
         - room
         - date
       properties:
-        name: 
+        name:
           type: string
-          example: How to program in 68k assembler 
+          example: How to program in 68k assembler
         description:
           type: string
-          example: You will never approve computer architecture 
+          example: You will never approve computer architecture
         speaker:
           $ref: "#/components/schemas/SpeakerResource"
         company:
@@ -502,12 +505,11 @@ components:
         room:
           type: string
           example: Wellington or Peralta
-        date: 
+        date:
           type: string
           format: date
           example: "2018-10-29T10:03:56.127Z"
     # END WORKSHOPS
-    
 
     CompanyResource:
       type: object
@@ -519,7 +521,7 @@ components:
         - email
         - contact_phone
       properties:
-        name: 
+        name:
           type: string
           example: Some random IT company
         sponsorType:
@@ -529,7 +531,7 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/iron_man"
-        talks: 
+        talks:
           $ref: "#/components/schemas/TalkResource"
         email:
           type: string
@@ -540,10 +542,7 @@ components:
           type: string
           example: "957762888"
 
-          
-          
     #  END EVENTS
-
 
     # PRIZE
     PrizeResource:
@@ -553,20 +552,19 @@ components:
         - description
         - image
       properties:
-        name: 
+        name:
           type: string
           example: Minttu
-        description: 
+        description:
           type: string
-          example: One full bottle of minttu
+          example: One full bottle of Minttu
         image:
           type: string
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/iron_man"
     # END PRIZE
-    
-     
+
     # SPONSORS
     SponsorsResource:
       type: object
@@ -574,15 +572,15 @@ components:
         - category
         - sponsors
       properties:
-        type:
-          category: string
+        category:
+          type: string
           pattern: "bronce | plata | oro | platino"
           example: oro
         sponsors:
           type: array
           items:
             $ref: "#/components/schemas/SponsorResource"
-            
+
     SponsorResource:
       type: object
       required:
@@ -591,7 +589,7 @@ components:
       properties:
         name:
           type: string
-          example: Los Vengadores
+          example: Avengers Endgame
         logo:
           type: string
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
@@ -603,22 +601,18 @@ components:
       type: object
       required:
         - edition
-        - ntalks
-        - talks
-        - first_day_of_event
+        - n_talks
+        - talks_attended
       properties:
         edition:
-          $ref: "#/components/schemas/EditionResource"
-        ntalks:
           type: integer
-          example: 27
           minimum: 1
-        talks:
-          $ref: "#/components/schemas/TalkResource"
-        first_day_of_event:
-          type: string
-          format: date
-          
-          
-        
-
+          example: 2019
+        n_talks:
+          type: integer
+          minimum: 1
+          example: 27
+        talks_attended:
+          type: array
+          items:
+            $ref: "#/components/schemas/TalkResource"
