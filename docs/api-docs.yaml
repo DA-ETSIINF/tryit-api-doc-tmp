@@ -4,7 +4,7 @@ servers:
     url: https://congresotryit.es
 info:
   description: Official API for the Try IT! congress
-  version: "1.0"
+  version: "1.0.1"
   title: Try IT! API
   contact:
     email: maximo.garcia.martinez@alumnos.upm.es
@@ -14,16 +14,20 @@ info:
 tags:
   - name: Home
     description: Basic information which will be used in the home screen.
-  - name: Events
-    description: Information about the past editions of the congress.
+  - name: Editions
+    description: Get all the Ids for all the editions
+  - name: Sessions
+    description: Information about the different sessions
   - name: Tickets
     description: Page with a form that allow users to generate tickets.
   - name: Volunteers
     description: Page with a form that allow users with tickets to be part of the staff of the congress.
-  - name: Escape-room
-    description: Page with a form that allow users to join one of the session of the escape room.
+  - name: Events
+    description: Endpoint that allow to sends forms for the events.
   - name: ECTS
     description: Page with a form that allow users to check how many ECTS they will earn.
+  - name: Validate
+    description: Endpoint used by the volunteers to validate the tickets.
 paths:
   /sponsors:
     get:
@@ -56,51 +60,45 @@ paths:
               schema:
                 $ref: "#/components/schemas/StreamingResource"
 
-  /events:
+  /editions:
     get:
       tags:
-        - Events
-      summary: Returns a JSON object with all the talks and workshops
-      operationId: getTalks
+        - Editions
+      summary: Returns a JSON object with all editions
+      operationId: getEditions
       description: |
-        Returns the information of the talks and the workshops of the last editions or all of the editions. If a edition is not specified, it will return the current edition by default.
-      parameters:
-        - in: query
-          name: edition
-          description: Allow to specify if the response should have the information of the current edition or the information of all of the editions. It should contain "all" or "current".
-          required: false
-          schema:
-            type: string
+        Returns a JSON object with all editions and the year which will be used in /sessions y /events.
       responses:
         "200":
-          description: OK - Response using edition="current" or empty edition parameter
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EditionResource"
-
-  /events?edition=all:
-    get:
-      tags:
-        - Events
-      summary: Returns a JSON object with all the talks and workshops
-      operationId: getAllTalks
-      description: |
-        Returns the information of the talks and the workshops of the last editions or all of the editions. If a edition is not specified, it will return the current edition by default.
-      parameters:
-        - in: query
-          name: edition
-          description: Allow to specify if the response should have the information of the current edition or the information of all of the editions. It should contain "all" or "current".
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK - Response using edition="all"
+          description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionsResource"
+
+  /sessions/{year}:
+    get:
+      tags:
+        - Sessions
+      summary: Returns a JSON object with all the talks and workshops
+      operationId: getSessions
+      description: |
+        Returns the information of the talks and the workshops of the year in the query
+      parameters: 
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResource"
 
   /tickets:
     post:
@@ -118,6 +116,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/TicketResource"
 
+  /volunteers-time-periods:
+    get:
+      tags:
+        - Volunteers
+      summary: Obtains the time periods available for the volunteers.
+      operationId: getVolunteer
+      description: |
+        Obtains the time periods available for the volunteers. The id is given in order to send back in the POST request.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VolunteerPeriodsResource"
   /volunteers:
     post:
       tags:
@@ -140,35 +155,88 @@ paths:
               schema:
                 $ref: "#/components/schemas/InvalidTicketResource"
 
-  /escape-room:
+  /events/{year}:
     get:
       tags:
-        - Escape-room
-      summary: Returns the list of available sessions for participate
-      operationId: getEscapeRoom
+        - Events
+      summary: Returns the list of all the events in the given year
+      operationId: getEvents
       description: |
-        Returns a list with all the slots available and the number of people already registered so, the user can see how much room left it has.
+        Returns the list of all the events in the given year.
+      parameters: 
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EscapeRoomGetResource"
+                $ref: "#/components/schemas/EventsResource"
+  /events/{year}/{id}:
+    get:
+      tags:
+        - Events
+      summary: Returns the list of available sessions for the given session
+      operationId: getEvent
+      description: |
+        Returns a list with all the slots available and the number of slots left.
+      parameters: 
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+        - in: path
+          name: id
+          description: Id of the event
+          required: true
+          schema:
+            type: integer
+            example: 324  
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventGetResource"
     post:
       tags:
-        - Escape-room
-      summary: Register a user to one of the sessions for the Escape Room
-      operationId: postEscapeRoom
+        - Events
+      summary: Register a user to one of the sessions for the Events
+      operationId: postEvent
       description: |
         Sends the information of the user which want to join one of the sessions
+      parameters: 
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+        - in: path
+          name: id
+          description: Id of the event
+          required: true
+          schema:
+            type: integer
+            example: 324  
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EscapeRoomPostResource"
+                $ref: "#/components/schemas/EventPostResource"
         "400":
           description: The user must create a ticket first
           content:
@@ -192,7 +260,7 @@ paths:
           schema:
             type: string
         - in: query
-          name: personal_id
+          name: identity
           description: Personal ID used by the user when the ticket was created
           required: true
           schema:
@@ -204,16 +272,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ECTSResource"
+  /validate:
+    post:
+      tags:
+        - Validate
+      summary: Sends the information in order to validate tickets
+      operationId: postValidation
+      description: |
+        Sends the information in order to validate tickets
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationResource"
 
 components:
   schemas:
+    EditionsResource:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - year
+        properties:
+          id:
+            $ref: "#/components/schemas/IdResource"
+          year:
+            type: integer
+            example: 2020
+
     # TICKET
     TicketResource:
       type: object
       required:
         - name
         - lastname
-        - personal_id
+        - identity
         - email
         - is_student
         - phone
@@ -224,9 +321,9 @@ components:
         lastname:
           type: string
           example: Man The Best
-        personal_id:
+        identity:
           type: string
-          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
+          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/]"
           example: 00112233K
         email:
           type: string
@@ -269,67 +366,113 @@ components:
           type: string
           example: The user must have a ticket for the current edition
 
-    TimePeriodsResource:
+    DateResource:
+      type: integer
+      example: 1581089789382
+
+    IdResource:
+      type: integer
+      example: 812
+
+    VolunteerPeriodsResource:
       type: object
       required:
         - date
-        - time_period
+        - period
+        - id
       properties:
         date:
-          type: string
-          format: date
-          example: "2020-10-29T10:03:56.127Z"
-        time_period:
+          $ref: "#/components/schemas/DateResource"
+        period:
           type: string
           example: Morning
+        id:
+          $ref: "#/components/schemas/IdResource"
 
     # VOLUNTEERS
     VolunteerResource:
       type: object
       required:
         - time_periods
-        - personal_id
+        - identity
+        - commentary
+        - shirt
+        - android
       properties:
         time_periods:
           type: array
           items:
-            $ref: "#/components/schemas/TimePeriodsResource"
-        personal_id:
+            $ref: "#/components/schemas/IdResource"
+        identity:
           type: string
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
           example: Man The Best
+        commentary:
+          type: string
+          example: This is a string given by the user
+        shirt:
+          type: string
+          example: s | m | l | xl | xxl
+        android:
+          type: boolean
+          example: True
     # END VOLUNTEERS
 
-    # ESCAPE ROOM
-    EscapeRoomGetResource:
+    # Event
+    EventsResource:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+          - description
+        properties:
+          id:
+            $ref: "#/components/schemas/IdResource"
+          name:
+            type: string
+            example: Awesome name
+          description:
+            type: string
+            example: Awesome description
+    EventGetResource:
       type: array
       items:
         type: object
         required:
           - date
-          - n_registered
+          - slots_left
+          - period
+          - name
+          - description
         properties:
           date:
+            $ref: "#/components/schemas/DateResource"
+          id:
+            $ref: "#/components/schemas/IdResource"
+          period:
             type: string
-            format: date
-            example: "2020-10-29T10:03:56.127Z"
-          n_registered:
-            type: integer
-            minimum: 0
-            example: 2
+            example: Morning
+          name:
+            type: string
+            example: Awesome name
+          description:
+            type: string
+            example: Awesome description
 
-    EscapeRoomPostResource:
+    EventPostResource:
       type: object
       required:
         - time_period
-        - personal_id
+        - identity
       properties:
         time_period:
-          $ref: "#/components/schemas/TimePeriodsResource"
-        personal_id:
+          $ref: "#/components/schemas/IdResource"
+        identity:
           type: string
           pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
-          example: Man The Best
+          example: 11223344K
     # END ESCAPE ROOM
 
     StreamingResource:
@@ -350,7 +493,6 @@ components:
           type: boolean
           example: True
 
-    # EVENTS
     # SPEAKER
     SpeakerResource:
       type: object
@@ -396,11 +538,6 @@ components:
               pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
               format: url
               example: "https://linkedin.com/IronMan"
-            google_plus:
-              type: string
-              pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
-              format: url
-              example: "https://google_plus.com/IronMan"
             github:
               type: string
               pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
@@ -413,34 +550,24 @@ components:
               example: "https://gitlab.com/IronMan"
     # END SPEAKER
 
-    EditionsResource:
-      type: array
-      items:
-        $ref: "#/components/schemas/EditionResource"
-
-    EditionResource:
+    SessionResource:
       type: object
       required:
-        - events
         - year
+        - talks
+        - workshops
       properties:
         year:
           type: integer
           example: 2020
-        events:
-          type: object
-          required:
-            - talks
-            - workshops
-          properties:
-            talks:
-              type: array
-              items:
-                $ref: "#/components/schemas/TalkResource"
-            workshops:
-              type: array
-              items:
-                $ref: "#/components/schemas/WorkshopResource"
+        talks:
+          type: array
+          items:
+            $ref: "#/components/schemas/TalkResource"
+        workshops:
+          type: array
+          items:
+            $ref: "#/components/schemas/WorkshopResource"
 
     # TALKS
     TalkResource:
@@ -472,17 +599,14 @@ components:
           format: url
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           example: "https://www.youtube.com/watch?v=ANOTHERONE"
-        date:
-          type: object
-          properties:
-            start:
-              type: string
-              format: date
-              example: "2018-10-29T10:03:56.127Z"
-            end:
-              type: string
-              format: date
-              example: "2018-10-29T12:00:56.127Z"
+        startdate:
+          type: string
+          format: date
+          example: "2018-10-29T10:03:56.127Z"
+        enddate:
+          type: string
+          format: date
+          example: "2018-10-29T12:03:56.127Z"
         slide:
           type: string # VERIFY
           format: url
@@ -493,8 +617,10 @@ components:
           example: dark room
         prize:
           $ref: "#/components/schemas/PrizeResource"
-        speaker:
-          $ref: "#/components/schemas/SpeakerResource"
+        speakers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SpeakerResource"
     # END TALKS
 
     # WORKSHOPS
@@ -503,8 +629,7 @@ components:
       required:
         - name
         - description
-        - speaker
-        - company
+        - speakers
         - room
         - date
       properties:
@@ -514,10 +639,10 @@ components:
         description:
           type: string
           example: You will never approve computer architecture
-        speaker:
-          $ref: "#/components/schemas/SpeakerResource"
-        company:
-          $ref: "#/components/schemas/CompanyResource"
+        speakers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SpeakerResource"
         room:
           type: string
           example: Wellington or Peralta
@@ -533,8 +658,7 @@ components:
         - name
         - sponsor_type
         - logo
-        - email
-        - contact_phone # TO CHECK
+        - web
       properties:
         name:
           type: string
@@ -547,15 +671,12 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/mintu"
-        email:
+        web:
           type: string
-          format: email
-          pattern: "TODO"
-          example: some_name@company.es
-        contact_phone:
-          type: string
-          example: "957762888"
-    #  END EVENTS
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.company.com/mintu"
+    #  END Sessions
 
     # PRIZE
     PrizeResource:
@@ -580,19 +701,21 @@ components:
 
     # SPONSORS
     SponsorsResource:
-      type: object
-      required:
-        - category
-        - sponsors
-      properties:
-        category:
-          type: string
-          pattern: "bronce | plata | oro | platino"
-          example: oro
-        sponsors:
-          type: array
-          items:
-            $ref: "#/components/schemas/SponsorResource"
+      type: array
+      items:
+        type: object
+        required:
+          - category
+          - sponsors
+        properties:
+          category:
+            type: string
+            pattern: "bronce | plata | oro | platino"
+            example: oro
+          sponsors:
+            type: array
+            items:
+              $ref: "#/components/schemas/SponsorResource"
 
     SponsorResource:
       type: object
@@ -629,3 +752,28 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TalkResource"
+
+    ValidationResource:
+      type: object
+      required:
+        - session_id
+        - ticket_id
+        - ticket_signature
+        - signature
+        - time_stamp
+      properties:
+        session_id:
+          type: integer
+          example: 42
+        ticket_id:
+          type: integer
+          example: 75
+        ticket_signature:
+          type: string
+          example: KFSDHJF8232L
+        signature:
+          type: string
+          example: RE34TGFDS
+        time_stamp:
+          type: integer
+          example: 234213414123
