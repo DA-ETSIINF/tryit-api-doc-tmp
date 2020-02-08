@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -690,7 +691,7 @@
     // Script section to load models into a JS Var
     var defs = {}
             defs.CompanyResource = {
-  "required" : [ "logo", "name", "sponsor_type", "web" ],
+  "required" : [ "logo", "name", "sponsor_type", "url" ],
   "type" : "object",
   "properties" : {
     "name" : {
@@ -707,7 +708,7 @@
       "format" : "url",
       "example" : "https://www.images.com/mintu"
     },
-    "web" : {
+    "url" : {
       "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
       "type" : "string",
       "format" : "url",
@@ -748,7 +749,7 @@
   }
 };
             defs.EditionsResource_inner = {
-  "required" : [ "id", "year" ],
+  "required" : [ "description", "end_date", "google_calendar_url", "id", "slogan", "start_date", "title", "year" ],
   "type" : "object",
   "properties" : {
     "id" : {
@@ -757,28 +758,36 @@
     "year" : {
       "type" : "integer",
       "example" : 2020
+    },
+    "title" : {
+      "type" : "string",
+      "example" : "Try IT! 2020"
+    },
+    "slogan" : {
+      "type" : "string"
+    },
+    "description" : {
+      "type" : "string"
+    },
+    "start_date" : {
+      "$ref" : "#/components/schemas/DateResource"
+    },
+    "end_date" : {
+      "$ref" : "#/components/schemas/DateResource"
+    },
+    "google_calendar_url" : {
+      "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
+      "type" : "string",
+      "format" : "url"
     }
   }
 };
             defs.EventGetResource = {
-  "type" : "array",
-  "items" : {
-    "$ref" : "#/components/schemas/EventGetResource_inner"
-  }
-};
-            defs.EventGetResource_inner = {
-  "required" : [ "date", "description", "name", "period", "slots_left" ],
+  "required" : [ "capacity", "description", "name", "registration", "time_slots" ],
   "type" : "object",
   "properties" : {
-    "date" : {
-      "$ref" : "#/components/schemas/DateResource"
-    },
     "id" : {
       "$ref" : "#/components/schemas/IdResource"
-    },
-    "period" : {
-      "type" : "string",
-      "example" : "Morning"
     },
     "name" : {
       "type" : "string",
@@ -787,6 +796,48 @@
     "description" : {
       "type" : "string",
       "example" : "Awesome description"
+    },
+    "registration" : {
+      "type" : "boolean",
+      "example" : true
+    },
+    "form" : {
+      "$ref" : "#/components/schemas/EventGetResource_form"
+    },
+    "time_slots" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/EventGetResource_time_slots"
+      }
+    }
+  }
+};
+            defs.EventGetResource_form = {
+  "required" : [ "maximum_choices", "registration_type" ],
+  "type" : "object",
+  "properties" : {
+    "registration_type" : {
+      "type" : "string",
+      "example" : "time_period | groups"
+    },
+    "maximum_choices" : {
+      "type" : "integer"
+    }
+  }
+};
+            defs.EventGetResource_time_slots = {
+  "required" : [ "date", "this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max" ],
+  "properties" : {
+    "date" : {
+      "$ref" : "#/components/schemas/DateResource"
+    },
+    "capacity" : {
+      "type" : "integer",
+      "example" : 10
+    },
+    "this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max" : {
+      "type" : "integer",
+      "example" : 4
     }
   }
 };
@@ -811,7 +862,7 @@
   }
 };
             defs.EventsResource_inner = {
-  "required" : [ "description", "id", "name" ],
+  "required" : [ "description", "id", "image", "name", "poster", "registration" ],
   "type" : "object",
   "properties" : {
     "id" : {
@@ -824,6 +875,22 @@
     "description" : {
       "type" : "string",
       "example" : "Awesome description"
+    },
+    "image" : {
+      "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
+      "type" : "string",
+      "format" : "url",
+      "example" : "https://www.image.com/"
+    },
+    "poster" : {
+      "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
+      "type" : "string",
+      "format" : "url",
+      "example" : "https://www.image.com/"
+    },
+    "registration" : {
+      "type" : "boolean",
+      "example" : true
     }
   }
 };
@@ -864,28 +931,6 @@
       "type" : "string",
       "format" : "url",
       "example" : "https://www.images.com/iron_man"
-    }
-  }
-};
-            defs.SessionResource = {
-  "required" : [ "talks", "workshops", "year" ],
-  "type" : "object",
-  "properties" : {
-    "year" : {
-      "type" : "integer",
-      "example" : 2020
-    },
-    "talks" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/TalkResource"
-      }
-    },
-    "workshops" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/WorkshopResource"
-      }
     }
   }
 };
@@ -1015,7 +1060,7 @@
   }
 };
             defs.TalkResource = {
-  "required" : [ "date", "description", "prize", "room", "slide", "speaker", "title", "url", "video" ],
+  "required" : [ "description", "end_date", "prize", "room", "slide", "speaker", "start_date", "title", "url", "video" ],
   "type" : "object",
   "properties" : {
     "title" : {
@@ -1038,13 +1083,11 @@
       "format" : "url",
       "example" : "https://www.youtube.com/watch?v=ANOTHERONE"
     },
-    "startdate" : {
-      "type" : "string",
-      "format" : "date"
+    "start_date" : {
+      "$ref" : "#/components/schemas/DateResource"
     },
-    "enddate" : {
-      "type" : "string",
-      "format" : "date"
+    "end_date" : {
+      "$ref" : "#/components/schemas/DateResource"
     },
     "slide" : {
       "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
@@ -1211,8 +1254,7 @@
       "example" : "Wellington or Peralta"
     },
     "date" : {
-      "type" : "string",
-      "format" : "date"
+      "$ref" : "#/components/schemas/DateResource"
     }
   }
 };
@@ -1240,15 +1282,20 @@
                     <li data-group="Editions" data-name="getEditions" class="">
                       <a href="#api-Editions-getEditions">getEditions</a>
                     </li>
-                  <li class="nav-header" data-group="Events"><a href="#api-Events">API Methods - Events</a></li>
-                    <li data-group="Events" data-name="getEvent" class="">
-                      <a href="#api-Events-getEvent">getEvent</a>
+                    <li data-group="Editions" data-name="getEvent" class="">
+                      <a href="#api-Editions-getEvent">getEvent</a>
                     </li>
-                    <li data-group="Events" data-name="getEvents" class="">
-                      <a href="#api-Events-getEvents">getEvents</a>
+                    <li data-group="Editions" data-name="getEvents" class="">
+                      <a href="#api-Editions-getEvents">getEvents</a>
                     </li>
-                    <li data-group="Events" data-name="postEvent" class="">
-                      <a href="#api-Events-postEvent">postEvent</a>
+                    <li data-group="Editions" data-name="getTalks" class="">
+                      <a href="#api-Editions-getTalks">getTalks</a>
+                    </li>
+                    <li data-group="Editions" data-name="getWorkshops" class="">
+                      <a href="#api-Editions-getWorkshops">getWorkshops</a>
+                    </li>
+                    <li data-group="Editions" data-name="postEvent" class="">
+                      <a href="#api-Editions-postEvent">postEvent</a>
                     </li>
                   <li class="nav-header" data-group="Home"><a href="#api-Home">API Methods - Home</a></li>
                     <li data-group="Home" data-name="getSponsors" class="">
@@ -1256,10 +1303,6 @@
                     </li>
                     <li data-group="Home" data-name="getStreaming" class="">
                       <a href="#api-Home-getStreaming">getStreaming</a>
-                    </li>
-                  <li class="nav-header" data-group="Sessions"><a href="#api-Sessions">API Methods - Sessions</a></li>
-                    <li data-group="Sessions" data-name="getSessions" class="">
-                      <a href="#api-Sessions-getSessions">getSessions</a>
                     </li>
                   <li class="nav-header" data-group="Tickets"><a href="#api-Tickets">API Methods - Tickets</a></li>
                     <li data-group="Tickets" data-name="postTicket" class="">
@@ -1883,101 +1926,98 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                  </section>
-                <section id="api-Events">
-                  <h1>Events</h1>
-                    <div id="api-Events-getEvent">
-                      <article id="api-Events-getEvent-0" data-group="User" data-name="getEvent" data-version="0">
+                    <div id="api-Editions-getEvent">
+                      <article id="api-Editions-getEvent-0" data-group="User" data-name="getEvent" data-version="0">
                         <div class="pull-left">
                           <h1>getEvent</h1>
-                          <p>Returns the list of available sessions for the given session</p>
+                          <p>Returns the information and the list of available sessions for the given session</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Returns a list with all the slots available and the number of slots left.
+                        <p class="marked">Returns a list with all the slots available and the number of slots left. The variable registration represent the need of a form because the users will need to register somehow in one of the time periods or groups. That&#x27;s why the form field exits which denotes the structure of the field: if the registration is for a period (like the Escape Room) or if it is for a workshops that needs groups (like ACM Hardware activity).
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/events/{year}/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/events/{year}/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Events-getEvent-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Events-getEvent-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Events-getEvent-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Events-getEvent-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Events-getEvent-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Events-getEvent-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Editions-getEvent-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getEvent-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getEvent-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getEvent-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getEvent-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getEvent-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Events-getEvent-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/events/{year}/{id}"</code></pre>
+                          <div class="tab-pane active" id="examples-Editions-getEvent-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/events/{year}/{id}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Events-getEvent-0-java">
+                          <div class="tab-pane" id="examples-Editions-getEvent-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
-import io.swagger.client.api.EventsApi;
+import io.swagger.client.api.EditionsApi;
 
 import java.io.File;
 import java.util.*;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
         
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
             EventGetResource result = apiInstance.getEvent(year, id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#getEvent");
+            System.err.println("Exception when calling EditionsApi#getEvent");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Events-getEvent-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EventsApi;
+                          <div class="tab-pane" id="examples-Editions-getEvent-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
             EventGetResource result = apiInstance.getEvent(year, id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#getEvent");
+            System.err.println("Exception when calling EditionsApi#getEvent");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Events-getEvent-0-groovy">
+  <div class="tab-pane" id="examples-Editions-getEvent-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Events-getEvent-0-objc">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
 Integer *id = 56; // Id of the event
 
-EventsApi *apiInstance = [[EventsApi alloc] init];
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
 
-// Returns the list of available sessions for the given session
+// Returns the information and the list of available sessions for the given session
 [apiInstance getEventWith:year
     id:id
               completionHandler: ^(EventGetResource output, NSError* error) {
@@ -1991,10 +2031,10 @@ EventsApi *apiInstance = [[EventsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvent-0-javascript">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
-var api = new TryItApi.EventsApi()
+var api = new TryItApi.EditionsApi()
 var year = 56; // {{Integer}} Year of the edition
 var id = 56; // {{Integer}} Id of the event
 
@@ -2009,10 +2049,10 @@ api.getEvent(year, id, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Events-getEvent-0-angular">
+                            <!--<div class="tab-pane" id="examples-Editions-getEvent-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Events-getEvent-0-csharp">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2026,19 +2066,19 @@ namespace Example
         public void main()
         {
 
-            var apiInstance = new EventsApi();
+            var apiInstance = new EditionsApi();
             var year = 56;  // Integer | Year of the edition
             var id = 56;  // Integer | Id of the event
 
             try
             {
-                // Returns the list of available sessions for the given session
+                // Returns the information and the list of available sessions for the given session
                 EventGetResource result = apiInstance.getEvent(year, id);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling EventsApi.getEvent: " + e.Message );
+                Debug.Print("Exception when calling EditionsApi.getEvent: " + e.Message );
             }
         }
     }
@@ -2046,11 +2086,11 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvent-0-php">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
-$api_instance = new Swagger\Client\ApiEventsApi();
+$api_instance = new Swagger\Client\ApiEditionsApi();
 $year = 56; // Integer | Year of the edition
 $id = 56; // Integer | Id of the event
 
@@ -2058,17 +2098,17 @@ try {
     $result = $api_instance->getEvent($year, $id);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling EventsApi->getEvent: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling EditionsApi->getEvent: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvent-0-perl">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::EventsApi;
+use WWW::SwaggerClient::EditionsApi;
 
-my $api_instance = WWW::SwaggerClient::EventsApi->new();
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
 my $year = 56; # Integer | Year of the edition
 my $id = 56; # Integer | Id of the event
 
@@ -2077,11 +2117,11 @@ eval {
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling EventsApi->getEvent: $@\n";
+    warn "Exception when calling EditionsApi->getEvent: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvent-0-python">
+                            <div class="tab-pane" id="examples-Editions-getEvent-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2089,16 +2129,16 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.EventsApi()
+api_instance = swagger_client.EditionsApi()
 year = 56 # Integer | Year of the edition
 id = 56 # Integer | Id of the event
 
 try: 
-    # Returns the list of available sessions for the given session
+    # Returns the information and the list of available sessions for the given session
     api_response = api_instance.get_event(year, id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling EventsApi->getEvent: %s\n" % e)</code></pre>
+    print("Exception when calling EditionsApi->getEvent: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2212,8 +2252,8 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Events-getEvents">
-                      <article id="api-Events-getEvents-0" data-group="User" data-name="getEvents" data-version="0">
+                    <div id="api-Editions-getEvents">
+                      <article id="api-Editions-getEvents-0" data-group="User" data-name="getEvents" data-version="0">
                         <div class="pull-left">
                           <h1>getEvents</h1>
                           <p>Returns the list of all the events in the given year</p>
@@ -2225,80 +2265,80 @@ except ApiException as e:
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/events/{year}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/events/{year}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Events-getEvents-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Events-getEvents-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Events-getEvents-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Events-getEvents-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Events-getEvents-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Events-getEvents-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Editions-getEvents-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getEvents-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getEvents-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getEvents-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getEvents-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getEvents-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Events-getEvents-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/events/{year}"</code></pre>
+                          <div class="tab-pane active" id="examples-Editions-getEvents-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/events/{year}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Events-getEvents-0-java">
+                          <div class="tab-pane" id="examples-Editions-getEvents-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
-import io.swagger.client.api.EventsApi;
+import io.swagger.client.api.EditionsApi;
 
 import java.io.File;
 import java.util.*;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
         
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         try {
             EventsResource result = apiInstance.getEvents(year);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#getEvents");
+            System.err.println("Exception when calling EditionsApi#getEvents");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Events-getEvents-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EventsApi;
+                          <div class="tab-pane" id="examples-Editions-getEvents-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         try {
             EventsResource result = apiInstance.getEvents(year);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#getEvents");
+            System.err.println("Exception when calling EditionsApi#getEvents");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Events-getEvents-0-groovy">
+  <div class="tab-pane" id="examples-Editions-getEvents-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Events-getEvents-0-objc">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
 
-EventsApi *apiInstance = [[EventsApi alloc] init];
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
 
 // Returns the list of all the events in the given year
 [apiInstance getEventsWith:year
@@ -2313,10 +2353,10 @@ EventsApi *apiInstance = [[EventsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvents-0-javascript">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
-var api = new TryItApi.EventsApi()
+var api = new TryItApi.EditionsApi()
 var year = 56; // {{Integer}} Year of the edition
 
 var callback = function(error, data, response) {
@@ -2330,10 +2370,10 @@ api.getEvents(year, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Events-getEvents-0-angular">
+                            <!--<div class="tab-pane" id="examples-Editions-getEvents-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Events-getEvents-0-csharp">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2347,7 +2387,7 @@ namespace Example
         public void main()
         {
 
-            var apiInstance = new EventsApi();
+            var apiInstance = new EditionsApi();
             var year = 56;  // Integer | Year of the edition
 
             try
@@ -2358,7 +2398,7 @@ namespace Example
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling EventsApi.getEvents: " + e.Message );
+                Debug.Print("Exception when calling EditionsApi.getEvents: " + e.Message );
             }
         }
     }
@@ -2366,28 +2406,28 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvents-0-php">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
-$api_instance = new Swagger\Client\ApiEventsApi();
+$api_instance = new Swagger\Client\ApiEditionsApi();
 $year = 56; // Integer | Year of the edition
 
 try {
     $result = $api_instance->getEvents($year);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling EventsApi->getEvents: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling EditionsApi->getEvents: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvents-0-perl">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::EventsApi;
+use WWW::SwaggerClient::EditionsApi;
 
-my $api_instance = WWW::SwaggerClient::EventsApi->new();
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
 my $year = 56; # Integer | Year of the edition
 
 eval { 
@@ -2395,11 +2435,11 @@ eval {
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling EventsApi->getEvents: $@\n";
+    warn "Exception when calling EditionsApi->getEvents: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-getEvents-0-python">
+                            <div class="tab-pane" id="examples-Editions-getEvents-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2407,7 +2447,7 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.EventsApi()
+api_instance = swagger_client.EditionsApi()
 year = 56 # Integer | Year of the edition
 
 try: 
@@ -2415,7 +2455,7 @@ try:
     api_response = api_instance.get_events(year)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling EventsApi->getEvents: %s\n" % e)</code></pre>
+    print("Exception when calling EditionsApi->getEvents: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2507,8 +2547,606 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Events-postEvent">
-                      <article id="api-Events-postEvent-0" data-group="User" data-name="postEvent" data-version="0">
+                    <div id="api-Editions-getTalks">
+                      <article id="api-Editions-getTalks-0" data-group="User" data-name="getTalks" data-version="0">
+                        <div class="pull-left">
+                          <h1>getTalks</h1>
+                          <p>Returns a JSON object with all the talks</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the information of the talks
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/talks/{year}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Editions-getTalks-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getTalks-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getTalks-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getTalks-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getTalks-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getTalks-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Editions-getTalks-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/talks/{year}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Editions-getTalks-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.EditionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[TalkResource] result = apiInstance.getTalks(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getTalks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Editions-getTalks-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[TalkResource] result = apiInstance.getTalks(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getTalks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Editions-getTalks-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
+
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
+
+// Returns a JSON object with all the talks
+[apiInstance getTalksWith:year
+              completionHandler: ^(array[TalkResource] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
+
+var api = new TryItApi.EditionsApi()
+var year = 56; // {{Integer}} Year of the edition
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getTalks(year, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Editions-getTalks-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getTalksExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new EditionsApi();
+            var year = 56;  // Integer | Year of the edition
+
+            try
+            {
+                // Returns a JSON object with all the talks
+                array[TalkResource] result = apiInstance.getTalks(year);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling EditionsApi.getTalks: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiEditionsApi();
+$year = 56; // Integer | Year of the edition
+
+try {
+    $result = $api_instance->getTalks($year);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling EditionsApi->getTalks: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::EditionsApi;
+
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
+my $year = 56; # Integer | Year of the edition
+
+eval { 
+    my $result = $api_instance->getTalks(year => $year);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling EditionsApi->getTalks: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getTalks-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.EditionsApi()
+year = 56 # Integer | Year of the edition
+
+try: 
+    # Returns a JSON object with all the talks
+    api_response = api_instance.get_talks(year)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling EditionsApi->getTalks: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">year*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getTalks_year">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          Year of the edition
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getTalks-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getTalks-200-schema">
+                                  <div id='responses-getTalks-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/TalkResource"
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getTalks-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getTalks-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getTalks-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Editions-getWorkshops">
+                      <article id="api-Editions-getWorkshops-0" data-group="User" data-name="getWorkshops" data-version="0">
+                        <div class="pull-left">
+                          <h1>getWorkshops</h1>
+                          <p>Returns a JSON object with all the workshops</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the information of the workshops
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/workshops/{year}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Editions-getWorkshops-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getWorkshops-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getWorkshops-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getWorkshops-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Editions-getWorkshops-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/workshops/{year}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Editions-getWorkshops-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.EditionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[WorkshopResource] result = apiInstance.getWorkshops(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getWorkshops");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Editions-getWorkshops-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[WorkshopResource] result = apiInstance.getWorkshops(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getWorkshops");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Editions-getWorkshops-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
+
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
+
+// Returns a JSON object with all the workshops
+[apiInstance getWorkshopsWith:year
+              completionHandler: ^(array[WorkshopResource] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
+
+var api = new TryItApi.EditionsApi()
+var year = 56; // {{Integer}} Year of the edition
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getWorkshops(year, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Editions-getWorkshops-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getWorkshopsExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new EditionsApi();
+            var year = 56;  // Integer | Year of the edition
+
+            try
+            {
+                // Returns a JSON object with all the workshops
+                array[WorkshopResource] result = apiInstance.getWorkshops(year);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling EditionsApi.getWorkshops: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiEditionsApi();
+$year = 56; // Integer | Year of the edition
+
+try {
+    $result = $api_instance->getWorkshops($year);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling EditionsApi->getWorkshops: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::EditionsApi;
+
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
+my $year = 56; # Integer | Year of the edition
+
+eval { 
+    my $result = $api_instance->getWorkshops(year => $year);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling EditionsApi->getWorkshops: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getWorkshops-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.EditionsApi()
+year = 56 # Integer | Year of the edition
+
+try: 
+    # Returns a JSON object with all the workshops
+    api_response = api_instance.get_workshops(year)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling EditionsApi->getWorkshops: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">year*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getWorkshops_year">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          Year of the edition
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getWorkshops-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getWorkshops-200-schema">
+                                  <div id='responses-getWorkshops-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/WorkshopResource"
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getWorkshops-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getWorkshops-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getWorkshops-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Editions-postEvent">
+                      <article id="api-Editions-postEvent-0" data-group="User" data-name="postEvent" data-version="0">
                         <div class="pull-left">
                           <h1>postEvent</h1>
                           <p>Register a user to one of the sessions for the Events</p>
@@ -2520,83 +3158,83 @@ except ApiException as e:
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/events/{year}/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/editions/events/{year}/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Events-postEvent-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Events-postEvent-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Events-postEvent-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Events-postEvent-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Events-postEvent-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Events-postEvent-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Editions-postEvent-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-postEvent-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-postEvent-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-postEvent-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-postEvent-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-postEvent-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Events-postEvent-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "https://congresotryit.es/events/{year}/{id}"</code></pre>
+                          <div class="tab-pane active" id="examples-Editions-postEvent-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "https://congresotryit.es/editions/events/{year}/{id}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Events-postEvent-0-java">
+                          <div class="tab-pane" id="examples-Editions-postEvent-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
-import io.swagger.client.api.EventsApi;
+import io.swagger.client.api.EditionsApi;
 
 import java.io.File;
 import java.util.*;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
         
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
             EventPostResource result = apiInstance.postEvent(year, id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#postEvent");
+            System.err.println("Exception when calling EditionsApi#postEvent");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Events-postEvent-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EventsApi;
+                          <div class="tab-pane" id="examples-Editions-postEvent-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
 
-public class EventsApiExample {
+public class EditionsApiExample {
 
     public static void main(String[] args) {
-        EventsApi apiInstance = new EventsApi();
+        EditionsApi apiInstance = new EditionsApi();
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
             EventPostResource result = apiInstance.postEvent(year, id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EventsApi#postEvent");
+            System.err.println("Exception when calling EditionsApi#postEvent");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Events-postEvent-0-groovy">
+  <div class="tab-pane" id="examples-Editions-postEvent-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Events-postEvent-0-objc">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
 Integer *id = 56; // Id of the event
 
-EventsApi *apiInstance = [[EventsApi alloc] init];
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
 
 // Register a user to one of the sessions for the Events
 [apiInstance postEventWith:year
@@ -2612,10 +3250,10 @@ EventsApi *apiInstance = [[EventsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-postEvent-0-javascript">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
-var api = new TryItApi.EventsApi()
+var api = new TryItApi.EditionsApi()
 var year = 56; // {{Integer}} Year of the edition
 var id = 56; // {{Integer}} Id of the event
 
@@ -2630,10 +3268,10 @@ api.postEvent(year, id, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Events-postEvent-0-angular">
+                            <!--<div class="tab-pane" id="examples-Editions-postEvent-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Events-postEvent-0-csharp">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2647,7 +3285,7 @@ namespace Example
         public void main()
         {
 
-            var apiInstance = new EventsApi();
+            var apiInstance = new EditionsApi();
             var year = 56;  // Integer | Year of the edition
             var id = 56;  // Integer | Id of the event
 
@@ -2659,7 +3297,7 @@ namespace Example
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling EventsApi.postEvent: " + e.Message );
+                Debug.Print("Exception when calling EditionsApi.postEvent: " + e.Message );
             }
         }
     }
@@ -2667,11 +3305,11 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-postEvent-0-php">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
-$api_instance = new Swagger\Client\ApiEventsApi();
+$api_instance = new Swagger\Client\ApiEditionsApi();
 $year = 56; // Integer | Year of the edition
 $id = 56; // Integer | Id of the event
 
@@ -2679,17 +3317,17 @@ try {
     $result = $api_instance->postEvent($year, $id);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling EventsApi->postEvent: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling EditionsApi->postEvent: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-postEvent-0-perl">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::EventsApi;
+use WWW::SwaggerClient::EditionsApi;
 
-my $api_instance = WWW::SwaggerClient::EventsApi->new();
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
 my $year = 56; # Integer | Year of the edition
 my $id = 56; # Integer | Id of the event
 
@@ -2698,11 +3336,11 @@ eval {
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling EventsApi->postEvent: $@\n";
+    warn "Exception when calling EditionsApi->postEvent: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Events-postEvent-0-python">
+                            <div class="tab-pane" id="examples-Editions-postEvent-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2710,7 +3348,7 @@ from swagger_client.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.EventsApi()
+api_instance = swagger_client.EditionsApi()
 year = 56 # Integer | Year of the edition
 id = 56 # Integer | Id of the event
 
@@ -2719,7 +3357,7 @@ try:
     api_response = api_instance.post_event(year, id)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling EventsApi->postEvent: %s\n" % e)</code></pre>
+    print("Exception when calling EditionsApi->postEvent: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -3392,304 +4030,6 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getStreaming-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                  </section>
-                <section id="api-Sessions">
-                  <h1>Sessions</h1>
-                    <div id="api-Sessions-getSessions">
-                      <article id="api-Sessions-getSessions-0" data-group="User" data-name="getSessions" data-version="0">
-                        <div class="pull-left">
-                          <h1>getSessions</h1>
-                          <p>Returns a JSON object with all the talks and workshops</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Returns the information of the talks and the workshops of the year in the query
-</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/sessions/{year}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Sessions-getSessions-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Sessions-getSessions-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Sessions-getSessions-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Sessions-getSessions-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Sessions-getSessions-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Sessions-getSessions-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Sessions-getSessions-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/sessions/{year}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Sessions-getSessions-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.SessionsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class SessionsApiExample {
-
-    public static void main(String[] args) {
-        
-        SessionsApi apiInstance = new SessionsApi();
-        Integer year = 56; // Integer | Year of the edition
-        try {
-            SessionResource result = apiInstance.getSessions(year);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SessionsApi#getSessions");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Sessions-getSessions-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.SessionsApi;
-
-public class SessionsApiExample {
-
-    public static void main(String[] args) {
-        SessionsApi apiInstance = new SessionsApi();
-        Integer year = 56; // Integer | Year of the edition
-        try {
-            SessionResource result = apiInstance.getSessions(year);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling SessionsApi#getSessions");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Sessions-getSessions-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
-
-SessionsApi *apiInstance = [[SessionsApi alloc] init];
-
-// Returns a JSON object with all the talks and workshops
-[apiInstance getSessionsWith:year
-              completionHandler: ^(SessionResource output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
-
-var api = new TryItApi.SessionsApi()
-var year = 56; // {{Integer}} Year of the edition
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getSessions(year, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Sessions-getSessions-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getSessionsExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new SessionsApi();
-            var year = 56;  // Integer | Year of the edition
-
-            try
-            {
-                // Returns a JSON object with all the talks and workshops
-                SessionResource result = apiInstance.getSessions(year);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling SessionsApi.getSessions: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiSessionsApi();
-$year = 56; // Integer | Year of the edition
-
-try {
-    $result = $api_instance->getSessions($year);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling SessionsApi->getSessions: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::SessionsApi;
-
-my $api_instance = WWW::SwaggerClient::SessionsApi->new();
-my $year = 56; # Integer | Year of the edition
-
-eval { 
-    my $result = $api_instance->getSessions(year => $year);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling SessionsApi->getSessions: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Sessions-getSessions-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.SessionsApi()
-year = 56 # Integer | Year of the edition
-
-try: 
-    # Returns a JSON object with all the talks and workshops
-    api_response = api_instance.get_sessions(year)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SessionsApi->getSessions: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">year*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getSessions_year">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      Integer
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          Year of the edition
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - OK </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getSessions-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getSessions-200-schema">
-                                  <div id='responses-getSessions-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "OK",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/SessionResource"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getSessions-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getSessions-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getSessions-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -6538,116 +6878,4 @@ except ApiException as e:
   });
   </script>
 </body>
-</html>postVolunteer-400-schema-400');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-postVolunteer-400-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                  </section>
-          </div>
-          <div id="footer">
-            <div id="api-_footer">
-              <p>Suggestions, contact, support and error reporting;
-                  <div class="app-desc">Information URL: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
-                  <div class="app-desc">Contact Info: <a href="maximo.garcia.martinez@alumnos.upm.es">maximo.garcia.martinez@alumnos.upm.es</a></div>
-              </p>
-                <div class="license-info">Apache 2.0</div>
-                <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0.html</div>
-            </div>
-          </div>
-      </div>
-    </div>
-  </div>
-  <script>
-  (function webpackUniversalModuleDefinition(root, factory) {
-  	if(typeof exports === 'object' && typeof module === 'object')
-  		module.exports = factory();
-  	else if(typeof define === 'function' && define.amd)
-  		define("JSONFormatter", [], factory);
-  	else if(typeof exports === 'object')
-  		exports["JSONFormatter"] = factory();
-  	else
-  		root["JSONFormatter"] = factory();
-  })(this, function() {
-  return /******/ (function(modules) { // webpackBootstrap
-  /******/ 	// The module cache
-  /******/ 	var installedModules = {};
-  /******/
-  /******/ 	// The require function
-  /******/ 	function __webpack_require__(moduleId) {
-  /******/
-  /******/ 		// Check if module is in cache
-  /******/ 		if(installedModules[moduleId])
-  /******/ 			return installedModules[moduleId].exports;
-  /******/
-  /******/ 		// Create a new module (and put it into the cache)
-  /******/ 		var module = installedModules[moduleId] = {
-  /******/ 			exports: {},
-  /******/ 			id: moduleId,
-  /******/ 			loaded: false
-  /******/ 		};
-  /******/
-  /******/ 		// Execute the module function
-  /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-  /******/
-  /******/ 		// Flag the module as loaded
-  /******/ 		module.loaded = true;
-  /******/
-  /******/ 		// Return the exports of the module
-  /******/ 		return module.exports;
-  /******/ 	}
-  /******/
-  /******/
-  /******/ 	// expose the modules object (__webpack_modules__)
-  /******/ 	__webpack_require__.m = modules;
-  /******/
-  /******/ 	// expose the module cache
-  /******/ 	__webpack_require__.c = installedModules;
-  /******/
-  /******/ 	// __webpack_public_path__
-  /******/ 	__webpack_require__.p = "dist";
-  /******/
-  /******/ 	// Load entry module and return exports
-  /******/ 	return __webpack_require__(0);
-  /******/ })
-  /************************************************************************/
-  /******/ ([
-  /* 0 */
-  /***/ function(module, exports, __webpack_require__) {
-  
-  	module.exports = __webpack_require__(1);
-  
-  
-  /***/ },
-  /* 1 */
-  /***/ function(module, exports, __webpack_require__) {
-  
-  	"use strict";
-  	__webpack_require__(2);
-  	var helpers_ts_1 = __webpack_require__(6);
-  	var DATE_STRING_REGEX = /(^\d{1,4}[\.|\\/|-]\d{1,2}[\.|\\/|-]\d{1,4})(\s*(?:0?[1-9]:[0-5]|1(?=[012])\d:[0-5])\d\s*[ap]m)?$/;
-  	var PARTIAL_DATE_REGEX = /\d{2}:\d{2}:\d{2} GMT-\d{4}/;
-  	var JSON_DATE_REGEX = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
-  	// When toggleing, don't animated removal or addition of more than a few items
-  	var MAX_ANIMATED_TOGGLE_ITEMS = 10;
-  	var requestAnimationFrame = window.requestAnimationFrame || function (cb) { cb(); return 0; };
-  	;
-  	var _defaultConfig = {
-  	    hoverPreviewEnabled: false,
-  	    hoverPreviewArrayCount: 100,
-  	    hoverPreviewFieldCount: 5,
-  	    animateOpen: true,
-  	    animateClose: true,
-  	    theme: null
-  	};
-  	module.exports = (function () {
-  	    /**
-  	     * @param 
+</html>

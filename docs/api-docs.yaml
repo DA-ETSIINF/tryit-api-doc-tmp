@@ -16,14 +16,10 @@ tags:
     description: Basic information which will be used in the home screen.
   - name: Editions
     description: Get all the Ids for all the editions
-  - name: Sessions
-    description: Information about the different sessions
   - name: Tickets
     description: Page with a form that allow users to generate tickets.
   - name: Volunteers
     description: Page with a form that allow users with tickets to be part of the staff of the congress.
-  - name: Events
-    description: Endpoint that allow to sends forms for the events.
   - name: ECTS
     description: Page with a form that allow users to check how many ECTS they will earn.
   - name: Validate
@@ -76,15 +72,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/EditionsResource"
 
-  /sessions/{year}:
+  /editions/talks/{year}:
     get:
       tags:
-        - Sessions
-      summary: Returns a JSON object with all the talks and workshops
-      operationId: getSessions
+        - Editions
+      summary: Returns a JSON object with all the talks
+      operationId: getTalks
       description: |
-        Returns the information of the talks and the workshops of the year in the query
-      parameters: 
+        Returns the information of the talks
+      parameters:
         - in: path
           name: year
           description: Year of the edition
@@ -98,7 +94,124 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionResource"
+                type: array
+                items:
+                  $ref: "#/components/schemas/TalkResource"
+
+  /editions/workshops/{year}:
+    get:
+      tags:
+        - Editions
+      summary: Returns a JSON object with all the workshops
+      operationId: getWorkshops
+      description: |
+        Returns the information of the workshops
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkshopResource"
+
+  /editions/events/{year}:
+    get:
+      tags:
+        - Editions
+      summary: Returns the list of all the events in the given year
+      operationId: getEvents
+      description: |
+        Returns the list of all the events in the given year.
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventsResource"
+  /editions/events/{year}/{id}:
+    get:
+      tags:
+        - Editions
+      summary: Returns the information and the list of available sessions for the given session
+      operationId: getEvent
+      description: |
+        Returns a list with all the slots available and the number of slots left. The variable registration represent the need of a form because the users will need to register somehow in one of the time periods or groups. That's why the form field exits which denotes the structure of the field: if the registration is for a period (like the Escape Room) or if it is for a workshops that needs groups (like ACM Hardware activity).
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+        - in: path
+          name: id
+          description: Id of the event
+          required: true
+          schema:
+            type: integer
+            example: 324
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventGetResource"
+    post:
+      tags:
+        - Editions
+      summary: Register a user to one of the sessions for the Events
+      operationId: postEvent
+      description: |
+        Sends the information of the user which want to join one of the sessions
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+        - in: path
+          name: id
+          description: Id of the event
+          required: true
+          schema:
+            type: integer
+            example: 324
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventPostResource"
+        "400":
+          description: The user must create a ticket first
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidTicketResource"
 
   /tickets:
     post:
@@ -148,95 +261,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VolunteerResource"
-        "400":
-          description: The user must create a ticket first
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidTicketResource"
-
-  /events/{year}:
-    get:
-      tags:
-        - Events
-      summary: Returns the list of all the events in the given year
-      operationId: getEvents
-      description: |
-        Returns the list of all the events in the given year.
-      parameters: 
-        - in: path
-          name: year
-          description: Year of the edition
-          required: true
-          schema:
-            type: integer
-            example: 2020
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EventsResource"
-  /events/{year}/{id}:
-    get:
-      tags:
-        - Events
-      summary: Returns the list of available sessions for the given session
-      operationId: getEvent
-      description: |
-        Returns a list with all the slots available and the number of slots left.
-      parameters: 
-        - in: path
-          name: year
-          description: Year of the edition
-          required: true
-          schema:
-            type: integer
-            example: 2020
-        - in: path
-          name: id
-          description: Id of the event
-          required: true
-          schema:
-            type: integer
-            example: 324  
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EventGetResource"
-    post:
-      tags:
-        - Events
-      summary: Register a user to one of the sessions for the Events
-      operationId: postEvent
-      description: |
-        Sends the information of the user which want to join one of the sessions
-      parameters: 
-        - in: path
-          name: year
-          description: Year of the edition
-          required: true
-          schema:
-            type: integer
-            example: 2020
-        - in: path
-          name: id
-          description: Id of the event
-          required: true
-          schema:
-            type: integer
-            example: 324  
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EventPostResource"
         "400":
           description: The user must create a ticket first
           content:
@@ -297,12 +321,33 @@ components:
         required:
           - id
           - year
+          - title
+          - slogan
+          - description
+          - start_date
+          - end_date
+          - google_calendar_url
         properties:
           id:
             $ref: "#/components/schemas/IdResource"
           year:
             type: integer
             example: 2020
+          title:
+            type: string
+            example: Try IT! 2020
+          slogan:
+            type: string
+          description:
+            type: string
+          start_date:
+            $ref: "#/components/schemas/DateResource"
+          end_date:
+            $ref: "#/components/schemas/DateResource"
+          google_calendar_url:
+            type: string
+            pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+            format: url
 
     # TICKET
     TicketResource:
@@ -427,6 +472,9 @@ components:
           - id
           - name
           - description
+          - image
+          - poster
+          - registration
         properties:
           id:
             $ref: "#/components/schemas/IdResource"
@@ -436,30 +484,67 @@ components:
           description:
             type: string
             example: Awesome description
+          image:
+            type: string
+            pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+            format: url
+            example: "https://www.image.com/"
+          poster:
+            type: string
+            pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+            format: url
+            example: "https://www.image.com/"
+          registration:
+            type: boolean
+            example: True
+
     EventGetResource:
-      type: array
-      items:
-        type: object
-        required:
-          - date
-          - slots_left
-          - period
-          - name
-          - description
-        properties:
-          date:
-            $ref: "#/components/schemas/DateResource"
-          id:
-            $ref: "#/components/schemas/IdResource"
-          period:
-            type: string
-            example: Morning
-          name:
-            type: string
-            example: Awesome name
-          description:
-            type: string
-            example: Awesome description
+      type: object
+      required:
+        - name
+        - description
+        - time_slots
+        - registration
+        - capacity
+      properties:
+        id:
+          $ref: "#/components/schemas/IdResource"
+        name:
+          type: string
+          example: Awesome name
+        description:
+          type: string
+          example: Awesome description
+        registration:
+          type: boolean
+          example: True
+        form:
+          type: object
+          required:
+            - registration_type
+            - maximum_choices
+          properties:
+            registration_type:
+              type: string
+              example: "time_period | groups"
+            maximum_choices:
+              type: integer
+              example: "1 | 0"
+        time_slots:
+          type: array
+          items:
+            required:
+              - date
+              - this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max
+            properties:
+              date:
+                $ref: "#/components/schemas/DateResource"
+              capacity:
+                type: integer
+                example: 10
+              ? this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max
+              : type: integer
+                example: 4
 
     EventPostResource:
       type: object
@@ -550,25 +635,6 @@ components:
               example: "https://gitlab.com/IronMan"
     # END SPEAKER
 
-    SessionResource:
-      type: object
-      required:
-        - year
-        - talks
-        - workshops
-      properties:
-        year:
-          type: integer
-          example: 2020
-        talks:
-          type: array
-          items:
-            $ref: "#/components/schemas/TalkResource"
-        workshops:
-          type: array
-          items:
-            $ref: "#/components/schemas/WorkshopResource"
-
     # TALKS
     TalkResource:
       type: object
@@ -577,7 +643,8 @@ components:
         - description
         - url
         - video
-        - date
+        - start_date
+        - end_date
         - slide
         - room
         - prize
@@ -599,14 +666,10 @@ components:
           format: url
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           example: "https://www.youtube.com/watch?v=ANOTHERONE"
-        startdate:
-          type: string
-          format: date
-          example: "2018-10-29T10:03:56.127Z"
-        enddate:
-          type: string
-          format: date
-          example: "2018-10-29T12:03:56.127Z"
+        start_date:
+          $ref: "#/components/schemas/DateResource"
+        end_date:
+          $ref: "#/components/schemas/DateResource"
         slide:
           type: string # VERIFY
           format: url
@@ -647,9 +710,7 @@ components:
           type: string
           example: Wellington or Peralta
         date:
-          type: string
-          format: date
-          example: "2018-10-29T10:03:56.127Z"
+          $ref: "#/components/schemas/DateResource"
     # END WORKSHOPS
 
     CompanyResource:
@@ -658,7 +719,7 @@ components:
         - name
         - sponsor_type
         - logo
-        - web
+        - url
       properties:
         name:
           type: string
@@ -671,7 +732,7 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/mintu"
-        web:
+        url:
           type: string
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
