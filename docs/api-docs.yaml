@@ -123,6 +123,31 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/WorkshopResource"
+  /editions/breaks/{year}:
+    get:
+      tags:
+        - Editions
+      summary: Returns a JSON object with all the breaks scheduled
+      operationId: getBreaks
+      description: |
+        Returns a JSON object with all the breaks scheduled
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BreakResource"
 
   /editions/events/{year}:
     get:
@@ -212,6 +237,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvalidTicketResource"
+  /editions/organizers/{year}:
+    get:
+      tags:
+        - Editions
+      summary: Returns the list of all the organizers
+      operationId: getOrganizers
+      description: |
+        Returns the list of all the organizers
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganizerResource"
 
   /tickets:
     post:
@@ -395,7 +445,6 @@ components:
           type: string
           example: "957762888"
     # END TICKET
-
     InvalidTicketResource:
       type: object
       required:
@@ -713,6 +762,21 @@ components:
           $ref: "#/components/schemas/DateResource"
     # END WORKSHOPS
 
+    BreakResource:
+      type: object
+      required:
+        - title
+        - start_date
+        - end_date
+      properties:
+        title:
+          type: string
+          example: How to do IT stuff
+        start_date:
+          $ref: "#/components/schemas/DateResource"
+        end_date:
+          $ref: "#/components/schemas/DateResource"
+
     CompanyResource:
       type: object
       required:
@@ -838,3 +902,30 @@ components:
         time_stamp:
           type: integer
           example: 234213414123
+
+    OrganizerResource:
+      required:
+        - name
+        - description
+        - email
+        - role
+        - image
+      properties:
+        name:
+          type: string
+          example: Iron man
+        description:
+          type: string
+          example: Best superhero ever
+        email:
+          type: string
+          format: email
+          example: contact@ironman.com
+        role:
+          type: string
+          example: It is the boss
+        image:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.image.com/"

@@ -690,6 +690,22 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+            defs.BreakResource = {
+  "required" : [ "end_date", "start_date", "title" ],
+  "type" : "object",
+  "properties" : {
+    "title" : {
+      "type" : "string",
+      "example" : "How to do IT stuff"
+    },
+    "start_date" : {
+      "$ref" : "#/components/schemas/DateResource"
+    },
+    "end_date" : {
+      "$ref" : "#/components/schemas/DateResource"
+    }
+  }
+};
             defs.CompanyResource = {
   "required" : [ "logo", "name", "sponsor_type", "url" ],
   "type" : "object",
@@ -911,6 +927,34 @@
     "string" : {
       "type" : "string",
       "example" : "The user must have a ticket for the current edition"
+    }
+  }
+};
+            defs.OrganizerResource = {
+  "required" : [ "description", "email", "image", "name", "role" ],
+  "properties" : {
+    "name" : {
+      "type" : "string",
+      "example" : "Iron man"
+    },
+    "description" : {
+      "type" : "string",
+      "example" : "Best superhero ever"
+    },
+    "email" : {
+      "type" : "string",
+      "format" : "email",
+      "example" : "contact@ironman.com"
+    },
+    "role" : {
+      "type" : "string",
+      "example" : "It is the boss"
+    },
+    "image" : {
+      "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
+      "type" : "string",
+      "format" : "url",
+      "example" : "https://www.image.com/"
     }
   }
 };
@@ -1279,6 +1323,9 @@
                       <a href="#api-ECTS-getECTS">getECTS</a>
                     </li>
                   <li class="nav-header" data-group="Editions"><a href="#api-Editions">API Methods - Editions</a></li>
+                    <li data-group="Editions" data-name="getBreaks" class="">
+                      <a href="#api-Editions-getBreaks">getBreaks</a>
+                    </li>
                     <li data-group="Editions" data-name="getEditions" class="">
                       <a href="#api-Editions-getEditions">getEditions</a>
                     </li>
@@ -1287,6 +1334,9 @@
                     </li>
                     <li data-group="Editions" data-name="getEvents" class="">
                       <a href="#api-Editions-getEvents">getEvents</a>
+                    </li>
+                    <li data-group="Editions" data-name="getOrganizers" class="">
+                      <a href="#api-Editions-getOrganizers">getOrganizers</a>
                     </li>
                     <li data-group="Editions" data-name="getTalks" class="">
                       <a href="#api-Editions-getTalks">getTalks</a>
@@ -1669,6 +1719,305 @@ except ApiException as e:
                   </section>
                 <section id="api-Editions">
                   <h1>Editions</h1>
+                    <div id="api-Editions-getBreaks">
+                      <article id="api-Editions-getBreaks-0" data-group="User" data-name="getBreaks" data-version="0">
+                        <div class="pull-left">
+                          <h1>getBreaks</h1>
+                          <p>Returns a JSON object with all the breaks scheduled</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns a JSON object with all the breaks scheduled
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/breaks/{year}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Editions-getBreaks-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getBreaks-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getBreaks-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getBreaks-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getBreaks-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getBreaks-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Editions-getBreaks-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/breaks/{year}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Editions-getBreaks-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.EditionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[BreakResource] result = apiInstance.getBreaks(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getBreaks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Editions-getBreaks-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[BreakResource] result = apiInstance.getBreaks(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getBreaks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Editions-getBreaks-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
+
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
+
+// Returns a JSON object with all the breaks scheduled
+[apiInstance getBreaksWith:year
+              completionHandler: ^(array[BreakResource] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
+
+var api = new TryItApi.EditionsApi()
+var year = 56; // {{Integer}} Year of the edition
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getBreaks(year, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Editions-getBreaks-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getBreaksExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new EditionsApi();
+            var year = 56;  // Integer | Year of the edition
+
+            try
+            {
+                // Returns a JSON object with all the breaks scheduled
+                array[BreakResource] result = apiInstance.getBreaks(year);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling EditionsApi.getBreaks: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiEditionsApi();
+$year = 56; // Integer | Year of the edition
+
+try {
+    $result = $api_instance->getBreaks($year);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling EditionsApi->getBreaks: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::EditionsApi;
+
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
+my $year = 56; # Integer | Year of the edition
+
+eval { 
+    my $result = $api_instance->getBreaks(year => $year);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling EditionsApi->getBreaks: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getBreaks-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.EditionsApi()
+year = 56 # Integer | Year of the edition
+
+try: 
+    # Returns a JSON object with all the breaks scheduled
+    api_response = api_instance.get_breaks(year)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling EditionsApi->getBreaks: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">year*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getBreaks_year">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          Year of the edition
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getBreaks-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getBreaks-200-schema">
+                                  <div id='responses-getBreaks-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/BreakResource"
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getBreaks-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getBreaks-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getBreaks-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Editions-getEditions">
                       <article id="api-Editions-getEditions-0" data-group="User" data-name="getEditions" data-version="0">
                         <div class="pull-left">
@@ -2541,6 +2890,305 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getEvents-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Editions-getOrganizers">
+                      <article id="api-Editions-getOrganizers-0" data-group="User" data-name="getOrganizers" data-version="0">
+                        <div class="pull-left">
+                          <h1>getOrganizers</h1>
+                          <p>Returns the list of all the organizers</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the list of all the organizers
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/editions/organizers/{year}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Editions-getOrganizers-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getOrganizers-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Editions-getOrganizers-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Editions-getOrganizers-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Editions-getOrganizers-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "https://congresotryit.es/editions/organizers/{year}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Editions-getOrganizers-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.EditionsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[OrganizerResource] result = apiInstance.getOrganizers(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getOrganizers");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Editions-getOrganizers-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.EditionsApi;
+
+public class EditionsApiExample {
+
+    public static void main(String[] args) {
+        EditionsApi apiInstance = new EditionsApi();
+        Integer year = 56; // Integer | Year of the edition
+        try {
+            array[OrganizerResource] result = apiInstance.getOrganizers(year);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling EditionsApi#getOrganizers");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Editions-getOrganizers-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
+
+EditionsApi *apiInstance = [[EditionsApi alloc] init];
+
+// Returns the list of all the organizers
+[apiInstance getOrganizersWith:year
+              completionHandler: ^(array[OrganizerResource] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
+
+var api = new TryItApi.EditionsApi()
+var year = 56; // {{Integer}} Year of the edition
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getOrganizers(year, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Editions-getOrganizers-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getOrganizersExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new EditionsApi();
+            var year = 56;  // Integer | Year of the edition
+
+            try
+            {
+                // Returns the list of all the organizers
+                array[OrganizerResource] result = apiInstance.getOrganizers(year);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling EditionsApi.getOrganizers: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiEditionsApi();
+$year = 56; // Integer | Year of the edition
+
+try {
+    $result = $api_instance->getOrganizers($year);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling EditionsApi->getOrganizers: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::EditionsApi;
+
+my $api_instance = WWW::SwaggerClient::EditionsApi->new();
+my $year = 56; # Integer | Year of the edition
+
+eval { 
+    my $result = $api_instance->getOrganizers(year => $year);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling EditionsApi->getOrganizers: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Editions-getOrganizers-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.EditionsApi()
+year = 56 # Integer | Year of the edition
+
+try: 
+    # Returns the list of all the organizers
+    api_response = api_instance.get_organizers(year)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling EditionsApi->getOrganizers: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">year*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getOrganizers_year">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          Year of the edition
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - OK </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getOrganizers-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getOrganizers-200-schema">
+                                  <div id='responses-getOrganizers-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/OrganizerResource"
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getOrganizers-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getOrganizers-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getOrganizers-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
