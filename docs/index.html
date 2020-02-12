@@ -737,7 +737,7 @@
   "example" : 1581089789382
 };
             defs.ECTSResource = {
-  "required" : [ "edition", "n_talks", "talks_attended" ],
+  "required" : [ "attended_to", "edition", "n_talks" ],
   "type" : "object",
   "properties" : {
     "edition" : {
@@ -750,11 +750,29 @@
       "type" : "integer",
       "example" : 27
     },
-    "talks_attended" : {
+    "attended_to" : {
+      "$ref" : "#/components/schemas/ECTSResource_attended_to"
+    }
+  }
+};
+            defs.ECTSResource_attended_to = {
+  "required" : [ "events", "talks", "workshops" ],
+  "type" : "object",
+  "properties" : {
+    "talks" : {
       "type" : "array",
       "items" : {
         "$ref" : "#/components/schemas/TalkResource"
       }
+    },
+    "workshops" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/WorkshopResource"
+      }
+    },
+    "events" : {
+      "$ref" : "#/components/schemas/EventsResource"
     }
   }
 };
@@ -1046,7 +1064,7 @@
   }
 };
             defs.SponsorResource = {
-  "required" : [ "logo", "name" ],
+  "required" : [ "logo", "name", "size", "url" ],
   "type" : "object",
   "properties" : {
     "name" : {
@@ -1058,6 +1076,28 @@
       "type" : "string",
       "format" : "url",
       "example" : "https://www.images.com/iron_man"
+    },
+    "url" : {
+      "pattern" : "http[s]?:\\/\\/(?:[a-zA-Z]|[0-9]|[\\/.?&+!*=\\-])+(?![^,!;:\\s)])",
+      "type" : "string",
+      "format" : "url",
+      "example" : "https://www.company.com/"
+    },
+    "size" : {
+      "$ref" : "#/components/schemas/SponsorResource_size"
+    }
+  }
+};
+            defs.SponsorResource_size = {
+  "type" : "object",
+  "properties" : {
+    "width" : {
+      "type" : "integer",
+      "example" : 100
+    },
+    "height" : {
+      "type" : "integer",
+      "example" : 100
     }
   }
 };

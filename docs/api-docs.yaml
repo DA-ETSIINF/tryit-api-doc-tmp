@@ -847,6 +847,8 @@ components:
       required:
         - name
         - logo
+        - url
+        - size
       properties:
         name:
           type: string
@@ -856,6 +858,21 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/iron_man"
+        url:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.company.com/"
+        size:
+          type: object
+          properties:
+            width:
+              type: integer
+              example: 100
+            height:
+              type: integer
+              example: 100
+
     # END SPONSORS
 
     ECTSResource:
@@ -863,7 +880,7 @@ components:
       required:
         - edition
         - n_talks
-        - talks_attended
+        - attended_to
       properties:
         edition:
           type: integer
@@ -873,10 +890,23 @@ components:
           type: integer
           minimum: 1
           example: 27
-        talks_attended:
-          type: array
-          items:
-            $ref: "#/components/schemas/TalkResource"
+        attended_to:
+          type: object
+          required:
+            - talks
+            - workshops
+            - events
+          properties:
+            talks:
+              type: array
+              items:
+                $ref: "#/components/schemas/TalkResource"
+            workshops:
+              type: array
+              items:
+                $ref: "#/components/schemas/WorkshopResource"
+            events:
+              $ref: "#/components/schemas/EventsResource"
 
     ValidationResource:
       type: object
