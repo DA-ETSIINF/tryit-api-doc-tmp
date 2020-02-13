@@ -202,6 +202,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventGetResource"
+
     post:
       tags:
         - Editions
@@ -209,6 +210,12 @@ paths:
       operationId: postEvent
       description: |
         Sends the information of the user which want to join one of the sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventPostResource"
       parameters:
         - in: path
           name: year
@@ -230,7 +237,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EventPostResource"
+                $ref: "#/components/schemas/PostSuccessResource"
         "400":
           description: The user must create a ticket first
           content:
@@ -271,13 +278,19 @@ paths:
       operationId: postTicket
       description: |
         Sends the information of the form filled by the user to the server in order to create a new ticket and send him the email with the ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketResource"
       responses:
         "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TicketResource"
+                $ref: "#/components/schemas/PostSuccessResource"
 
   /volunteers-time-periods:
     get:
@@ -304,13 +317,19 @@ paths:
       operationId: postVolunteer
       description: |
         Sends the information of the form filled by the user to the server in order to create a new volunteer in the database. The user must have a ticket first. The backend will use personal id to make a relation between ticket and volunteer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VolunteerResource"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VolunteerResource"
+                $ref: "#/components/schemas/PostSuccessResource"
         "400":
           description: The user must create a ticket first
           content:
@@ -326,6 +345,12 @@ paths:
       operationId: getECTS
       description: |
         The student can check the number of ECTS earned in all the editions of the congress. At maximum of 2ECTS.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ECTSResource"
       parameters:
         - in: query
           name: edition
@@ -345,7 +370,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ECTSResource"
+                $ref: "#/components/schemas/PostSuccessResource"
   /validate:
     post:
       tags:
@@ -354,13 +379,19 @@ paths:
       operationId: postValidation
       description: |
         Sends the information in order to validate tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidationResource"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ValidationResource"
+                $ref: "#/components/schemas/PostSuccessResource"
 
 components:
   schemas:
@@ -959,3 +990,19 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.image.com/"
+    PostSuccessResource:
+      type: object
+      required:
+        - code
+        - message
+        - message_abbr
+      properties:
+        code:
+          type: integer
+          example: 12
+        message:
+          type: string
+          example: "Ticket creado correctamente"
+        message_abbr:
+          type: string
+          example: "ticket_post_success // See messages abbreviations"

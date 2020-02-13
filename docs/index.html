@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -976,6 +975,24 @@
     }
   }
 };
+            defs.PostSuccessResource = {
+  "required" : [ "code", "message", "message_abbr" ],
+  "type" : "object",
+  "properties" : {
+    "code" : {
+      "type" : "integer",
+      "example" : 12
+    },
+    "message" : {
+      "type" : "string",
+      "example" : "Ticket creado correctamente"
+    },
+    "message_abbr" : {
+      "type" : "string",
+      "example" : "ticket_post_success // See messages abbreviations"
+    }
+  }
+};
             defs.PrizeResource = {
   "required" : [ "description", "image", "name" ],
   "type" : "object",
@@ -1479,10 +1496,11 @@ public class ECTSApiExample {
     public static void main(String[] args) {
         
         ECTSApi apiInstance = new ECTSApi();
+        ECTSResource body = ; // ECTSResource | 
         String edition = edition_example; // String | Edition which user wants to know how many ECTS he/she earned
         String identity = identity_example; // String | Personal ID used by the user when the ticket was created
         try {
-            ECTSResource result = apiInstance.getECTS(edition, identity);
+            PostSuccessResource result = apiInstance.getECTS(body, edition, identity);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ECTSApi#getECTS");
@@ -1499,10 +1517,11 @@ public class ECTSApiExample {
 
     public static void main(String[] args) {
         ECTSApi apiInstance = new ECTSApi();
+        ECTSResource body = ; // ECTSResource | 
         String edition = edition_example; // String | Edition which user wants to know how many ECTS he/she earned
         String identity = identity_example; // String | Personal ID used by the user when the ticket was created
         try {
-            ECTSResource result = apiInstance.getECTS(edition, identity);
+            PostSuccessResource result = apiInstance.getECTS(body, edition, identity);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ECTSApi#getECTS");
@@ -1516,15 +1535,17 @@ public class ECTSApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-ECTS-getECTS-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *edition = edition_example; // Edition which user wants to know how many ECTS he/she earned
+                              <pre class="prettyprint"><code class="language-cpp">ECTSResource *body = ; // 
+String *edition = edition_example; // Edition which user wants to know how many ECTS he/she earned
 String *identity = identity_example; // Personal ID used by the user when the ticket was created
 
 ECTSApi *apiInstance = [[ECTSApi alloc] init];
 
 // Check the number of ECTS earned in all the editions of the congress.
-[apiInstance getECTSWith:edition
+[apiInstance getECTSWith:body
+    edition:edition
     identity:identity
-              completionHandler: ^(ECTSResource output, NSError* error) {
+              completionHandler: ^(PostSuccessResource output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1539,6 +1560,7 @@ ECTSApi *apiInstance = [[ECTSApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
 var api = new TryItApi.ECTSApi()
+var body = ; // {{ECTSResource}} 
 var edition = edition_example; // {{String}} Edition which user wants to know how many ECTS he/she earned
 var identity = identity_example; // {{String}} Personal ID used by the user when the ticket was created
 
@@ -1549,7 +1571,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getECTS(edition, identity, callback);
+api.getECTS(bodyeditionidentity, callback);
 </code></pre>
                             </div>
 
@@ -1571,13 +1593,14 @@ namespace Example
         {
 
             var apiInstance = new ECTSApi();
+            var body = new ECTSResource(); // ECTSResource | 
             var edition = edition_example;  // String | Edition which user wants to know how many ECTS he/she earned
             var identity = identity_example;  // String | Personal ID used by the user when the ticket was created
 
             try
             {
                 // Check the number of ECTS earned in all the editions of the congress.
-                ECTSResource result = apiInstance.getECTS(edition, identity);
+                PostSuccessResource result = apiInstance.getECTS(body, edition, identity);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1595,11 +1618,12 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiECTSApi();
+$body = ; // ECTSResource | 
 $edition = edition_example; // String | Edition which user wants to know how many ECTS he/she earned
 $identity = identity_example; // String | Personal ID used by the user when the ticket was created
 
 try {
-    $result = $api_instance->getECTS($edition, $identity);
+    $result = $api_instance->getECTS($body, $edition, $identity);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ECTSApi->getECTS: ', $e->getMessage(), PHP_EOL;
@@ -1613,11 +1637,12 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ECTSApi;
 
 my $api_instance = WWW::SwaggerClient::ECTSApi->new();
+my $body = WWW::SwaggerClient::Object::ECTSResource->new(); # ECTSResource | 
 my $edition = edition_example; # String | Edition which user wants to know how many ECTS he/she earned
 my $identity = identity_example; # String | Personal ID used by the user when the ticket was created
 
 eval { 
-    my $result = $api_instance->getECTS(edition => $edition, identity => $identity);
+    my $result = $api_instance->getECTS(body => $body, edition => $edition, identity => $identity);
     print Dumper($result);
 };
 if ($@) {
@@ -1634,12 +1659,13 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ECTSApi()
+body =  # ECTSResource | 
 edition = edition_example # String | Edition which user wants to know how many ECTS he/she earned
 identity = identity_example # String | Personal ID used by the user when the ticket was created
 
 try: 
     # Check the number of ECTS earned in all the editions of the congress.
-    api_response = api_instance.get_ects(edition, identity)
+    api_response = api_instance.get_ects(body, edition, identity)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ECTSApi->getECTS: %s\n" % e)</code></pre>
@@ -1650,6 +1676,49 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ECTSResource"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_getECTS_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_getECTS_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
                             <div class="methodsubtabletitle">Query parameters</div>
@@ -1724,7 +1793,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ECTSResource"
+        "$ref" : "#/components/schemas/PostSuccessResource"
       }
     }
   }
@@ -3882,10 +3951,11 @@ public class EditionsApiExample {
     public static void main(String[] args) {
         
         EditionsApi apiInstance = new EditionsApi();
+        EventPostResource body = ; // EventPostResource | 
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
-            EventPostResource result = apiInstance.postEvent(year, id);
+            PostSuccessResource result = apiInstance.postEvent(body, year, id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling EditionsApi#postEvent");
@@ -3902,10 +3972,11 @@ public class EditionsApiExample {
 
     public static void main(String[] args) {
         EditionsApi apiInstance = new EditionsApi();
+        EventPostResource body = ; // EventPostResource | 
         Integer year = 56; // Integer | Year of the edition
         Integer id = 56; // Integer | Id of the event
         try {
-            EventPostResource result = apiInstance.postEvent(year, id);
+            PostSuccessResource result = apiInstance.postEvent(body, year, id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling EditionsApi#postEvent");
@@ -3919,15 +3990,17 @@ public class EditionsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Editions-postEvent-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Integer *year = 56; // Year of the edition
+                              <pre class="prettyprint"><code class="language-cpp">EventPostResource *body = ; // 
+Integer *year = 56; // Year of the edition
 Integer *id = 56; // Id of the event
 
 EditionsApi *apiInstance = [[EditionsApi alloc] init];
 
 // Register a user to one of the sessions for the Events
-[apiInstance postEventWith:year
+[apiInstance postEventWith:body
+    year:year
     id:id
-              completionHandler: ^(EventPostResource output, NSError* error) {
+              completionHandler: ^(PostSuccessResource output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -3942,6 +4015,7 @@ EditionsApi *apiInstance = [[EditionsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
 var api = new TryItApi.EditionsApi()
+var body = ; // {{EventPostResource}} 
 var year = 56; // {{Integer}} Year of the edition
 var id = 56; // {{Integer}} Id of the event
 
@@ -3952,7 +4026,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.postEvent(year, id, callback);
+api.postEvent(bodyyearid, callback);
 </code></pre>
                             </div>
 
@@ -3974,13 +4048,14 @@ namespace Example
         {
 
             var apiInstance = new EditionsApi();
+            var body = new EventPostResource(); // EventPostResource | 
             var year = 56;  // Integer | Year of the edition
             var id = 56;  // Integer | Id of the event
 
             try
             {
                 // Register a user to one of the sessions for the Events
-                EventPostResource result = apiInstance.postEvent(year, id);
+                PostSuccessResource result = apiInstance.postEvent(body, year, id);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -3998,11 +4073,12 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiEditionsApi();
+$body = ; // EventPostResource | 
 $year = 56; // Integer | Year of the edition
 $id = 56; // Integer | Id of the event
 
 try {
-    $result = $api_instance->postEvent($year, $id);
+    $result = $api_instance->postEvent($body, $year, $id);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EditionsApi->postEvent: ', $e->getMessage(), PHP_EOL;
@@ -4016,11 +4092,12 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::EditionsApi;
 
 my $api_instance = WWW::SwaggerClient::EditionsApi->new();
+my $body = WWW::SwaggerClient::Object::EventPostResource->new(); # EventPostResource | 
 my $year = 56; # Integer | Year of the edition
 my $id = 56; # Integer | Id of the event
 
 eval { 
-    my $result = $api_instance->postEvent(year => $year, id => $id);
+    my $result = $api_instance->postEvent(body => $body, year => $year, id => $id);
     print Dumper($result);
 };
 if ($@) {
@@ -4037,12 +4114,13 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.EditionsApi()
+body =  # EventPostResource | 
 year = 56 # Integer | Year of the edition
 id = 56 # Integer | Id of the event
 
 try: 
     # Register a user to one of the sessions for the Events
-    api_response = api_instance.post_event(year, id)
+    api_response = api_instance.post_event(body, year, id)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling EditionsApi->postEvent: %s\n" % e)</code></pre>
@@ -4104,6 +4182,49 @@ except ApiException as e:
                             </table>
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/EventPostResource"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_postEvent_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_postEvent_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
 
@@ -4127,7 +4248,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/EventPostResource"
+        "$ref" : "#/components/schemas/PostSuccessResource"
       }
     }
   }
@@ -4776,8 +4897,9 @@ public class TicketsApiExample {
     public static void main(String[] args) {
         
         TicketsApi apiInstance = new TicketsApi();
+        TicketResource body = ; // TicketResource | 
         try {
-            TicketResource result = apiInstance.postTicket();
+            PostSuccessResource result = apiInstance.postTicket(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TicketsApi#postTicket");
@@ -4794,8 +4916,9 @@ public class TicketsApiExample {
 
     public static void main(String[] args) {
         TicketsApi apiInstance = new TicketsApi();
+        TicketResource body = ; // TicketResource | 
         try {
-            TicketResource result = apiInstance.postTicket();
+            PostSuccessResource result = apiInstance.postTicket(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TicketsApi#postTicket");
@@ -4809,12 +4932,13 @@ public class TicketsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Tickets-postTicket-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
+                              <pre class="prettyprint"><code class="language-cpp">TicketResource *body = ; // 
+
 TicketsApi *apiInstance = [[TicketsApi alloc] init];
 
 // Creates a new ticket
-[apiInstance postTicketWithCompletionHandler: 
-              ^(TicketResource output, NSError* error) {
+[apiInstance postTicketWith:body
+              completionHandler: ^(PostSuccessResource output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -4829,6 +4953,8 @@ TicketsApi *apiInstance = [[TicketsApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
 var api = new TryItApi.TicketsApi()
+var body = ; // {{TicketResource}} 
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -4836,7 +4962,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.postTicket(callback);
+api.postTicket(body, callback);
 </code></pre>
                             </div>
 
@@ -4858,11 +4984,12 @@ namespace Example
         {
 
             var apiInstance = new TicketsApi();
+            var body = new TicketResource(); // TicketResource | 
 
             try
             {
                 // Creates a new ticket
-                TicketResource result = apiInstance.postTicket();
+                PostSuccessResource result = apiInstance.postTicket(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -4880,9 +5007,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiTicketsApi();
+$body = ; // TicketResource | 
 
 try {
-    $result = $api_instance->postTicket();
+    $result = $api_instance->postTicket($body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling TicketsApi->postTicket: ', $e->getMessage(), PHP_EOL;
@@ -4896,9 +5024,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::TicketsApi;
 
 my $api_instance = WWW::SwaggerClient::TicketsApi->new();
+my $body = WWW::SwaggerClient::Object::TicketResource->new(); # TicketResource | 
 
 eval { 
-    my $result = $api_instance->postTicket();
+    my $result = $api_instance->postTicket(body => $body);
     print Dumper($result);
 };
 if ($@) {
@@ -4915,10 +5044,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.TicketsApi()
+body =  # TicketResource | 
 
 try: 
     # Creates a new ticket
-    api_response = api_instance.post_ticket()
+    api_response = api_instance.post_ticket(body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling TicketsApi->postTicket: %s\n" % e)</code></pre>
@@ -4929,6 +5059,49 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/TicketResource"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_postTicket_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_postTicket_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
 
@@ -4952,7 +5125,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/TicketResource"
+        "$ref" : "#/components/schemas/PostSuccessResource"
       }
     }
   }
@@ -5036,8 +5209,9 @@ public class ValidateApiExample {
     public static void main(String[] args) {
         
         ValidateApi apiInstance = new ValidateApi();
+        ValidationResource body = ; // ValidationResource | 
         try {
-            ValidationResource result = apiInstance.postValidation();
+            PostSuccessResource result = apiInstance.postValidation(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ValidateApi#postValidation");
@@ -5054,8 +5228,9 @@ public class ValidateApiExample {
 
     public static void main(String[] args) {
         ValidateApi apiInstance = new ValidateApi();
+        ValidationResource body = ; // ValidationResource | 
         try {
-            ValidationResource result = apiInstance.postValidation();
+            PostSuccessResource result = apiInstance.postValidation(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ValidateApi#postValidation");
@@ -5069,12 +5244,13 @@ public class ValidateApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Validate-postValidation-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
+                              <pre class="prettyprint"><code class="language-cpp">ValidationResource *body = ; // 
+
 ValidateApi *apiInstance = [[ValidateApi alloc] init];
 
 // Sends the information in order to validate tickets
-[apiInstance postValidationWithCompletionHandler: 
-              ^(ValidationResource output, NSError* error) {
+[apiInstance postValidationWith:body
+              completionHandler: ^(PostSuccessResource output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5089,6 +5265,8 @@ ValidateApi *apiInstance = [[ValidateApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
 var api = new TryItApi.ValidateApi()
+var body = ; // {{ValidationResource}} 
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -5096,7 +5274,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.postValidation(callback);
+api.postValidation(body, callback);
 </code></pre>
                             </div>
 
@@ -5118,11 +5296,12 @@ namespace Example
         {
 
             var apiInstance = new ValidateApi();
+            var body = new ValidationResource(); // ValidationResource | 
 
             try
             {
                 // Sends the information in order to validate tickets
-                ValidationResource result = apiInstance.postValidation();
+                PostSuccessResource result = apiInstance.postValidation(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5140,9 +5319,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiValidateApi();
+$body = ; // ValidationResource | 
 
 try {
-    $result = $api_instance->postValidation();
+    $result = $api_instance->postValidation($body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ValidateApi->postValidation: ', $e->getMessage(), PHP_EOL;
@@ -5156,9 +5336,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ValidateApi;
 
 my $api_instance = WWW::SwaggerClient::ValidateApi->new();
+my $body = WWW::SwaggerClient::Object::ValidationResource->new(); # ValidationResource | 
 
 eval { 
-    my $result = $api_instance->postValidation();
+    my $result = $api_instance->postValidation(body => $body);
     print Dumper($result);
 };
 if ($@) {
@@ -5175,10 +5356,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ValidateApi()
+body =  # ValidationResource | 
 
 try: 
     # Sends the information in order to validate tickets
-    api_response = api_instance.post_validation()
+    api_response = api_instance.post_validation(body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ValidateApi->postValidation: %s\n" % e)</code></pre>
@@ -5189,6 +5371,49 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ValidationResource"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_postValidation_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_postValidation_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
 
@@ -5212,7 +5437,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/ValidationResource"
+        "$ref" : "#/components/schemas/PostSuccessResource"
       }
     }
   }
@@ -5557,8 +5782,9 @@ public class VolunteersApiExample {
     public static void main(String[] args) {
         
         VolunteersApi apiInstance = new VolunteersApi();
+        VolunteerResource body = ; // VolunteerResource | 
         try {
-            VolunteerResource result = apiInstance.postVolunteer();
+            PostSuccessResource result = apiInstance.postVolunteer(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling VolunteersApi#postVolunteer");
@@ -5575,8 +5801,9 @@ public class VolunteersApiExample {
 
     public static void main(String[] args) {
         VolunteersApi apiInstance = new VolunteersApi();
+        VolunteerResource body = ; // VolunteerResource | 
         try {
-            VolunteerResource result = apiInstance.postVolunteer();
+            PostSuccessResource result = apiInstance.postVolunteer(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling VolunteersApi#postVolunteer");
@@ -5590,12 +5817,13 @@ public class VolunteersApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Volunteers-postVolunteer-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
+                              <pre class="prettyprint"><code class="language-cpp">VolunteerResource *body = ; // 
+
 VolunteersApi *apiInstance = [[VolunteersApi alloc] init];
 
 // Creates a new volunteer
-[apiInstance postVolunteerWithCompletionHandler: 
-              ^(VolunteerResource output, NSError* error) {
+[apiInstance postVolunteerWith:body
+              completionHandler: ^(PostSuccessResource output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -5610,6 +5838,8 @@ VolunteersApi *apiInstance = [[VolunteersApi alloc] init];
                               <pre class="prettyprint"><code class="language-js">var TryItApi = require('try_it_api');
 
 var api = new TryItApi.VolunteersApi()
+var body = ; // {{VolunteerResource}} 
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -5617,7 +5847,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.postVolunteer(callback);
+api.postVolunteer(body, callback);
 </code></pre>
                             </div>
 
@@ -5639,11 +5869,12 @@ namespace Example
         {
 
             var apiInstance = new VolunteersApi();
+            var body = new VolunteerResource(); // VolunteerResource | 
 
             try
             {
                 // Creates a new volunteer
-                VolunteerResource result = apiInstance.postVolunteer();
+                PostSuccessResource result = apiInstance.postVolunteer(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5661,9 +5892,10 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiVolunteersApi();
+$body = ; // VolunteerResource | 
 
 try {
-    $result = $api_instance->postVolunteer();
+    $result = $api_instance->postVolunteer($body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling VolunteersApi->postVolunteer: ', $e->getMessage(), PHP_EOL;
@@ -5677,9 +5909,10 @@ use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::VolunteersApi;
 
 my $api_instance = WWW::SwaggerClient::VolunteersApi->new();
+my $body = WWW::SwaggerClient::Object::VolunteerResource->new(); # VolunteerResource | 
 
 eval { 
-    my $result = $api_instance->postVolunteer();
+    my $result = $api_instance->postVolunteer(body => $body);
     print Dumper($result);
 };
 if ($@) {
@@ -5696,10 +5929,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.VolunteersApi()
+body =  # VolunteerResource | 
 
 try: 
     # Creates a new volunteer
-    api_response = api_instance.post_volunteer()
+    api_response = api_instance.post_volunteer(body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling VolunteersApi->postVolunteer: %s\n" % e)</code></pre>
@@ -5710,6 +5944,49 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/VolunteerResource"
+      }
+    }
+  },
+  "required" : true
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_postVolunteer_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_postVolunteer_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
 
@@ -5733,7 +6010,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/VolunteerResource"
+        "$ref" : "#/components/schemas/PostSuccessResource"
       }
     }
   }
