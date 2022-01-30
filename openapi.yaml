@@ -656,7 +656,7 @@ components:
           example: How to program in 68k assembler
         description:
           type: string
-          example: You will never approve computer architecture
+          example: This workshop will help you understand low level programming.
         speakers:
           type: array
           items:
