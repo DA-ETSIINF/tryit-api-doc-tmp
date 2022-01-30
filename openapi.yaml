@@ -60,6 +60,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/EditionsResource"
 
+  /editions/{year}:
+    get:
+      tags:
+        - Editions
+      summary: Returns a JSON object with info about a specific edition.
+      operationId: getYearEdition
+      description: |
+        Returns a JSON object with all editions.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YearResource"
+
   /editions/{year}/sponsors:
     get:
       tags:
@@ -160,40 +176,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/WorkshopResource"
 
-  /editions/{year}/breaks:
+  /editions/{year}/schedule:
     get:
       tags:
         - Editions
-      summary: Returns a JSON object with all the scheduled breaks
-      operationId: getBreaks
-      description: |
-        Returns a JSON object with all the breaks scheduled
-      parameters:
-        - in: path
-          name: year
-          description: Year of the edition
-          required: true
-          schema:
-            type: integer
-            example: 2020
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/BreakResource"
-
-  /editions/{year}/events:
-    get:
-      tags:
-        - Editions
-      summary: Returns the list of all the events in the specified edition
+      summary: Returns a schedule with all the events in the specified edition
       operationId: getEvents
       description: |
-        Returns the list of all the events in the given edition.
+        Returns a schedule with all the events in the given edition.
       parameters:
         - in: path
           name: year
@@ -208,7 +198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EventsResource"
+                $ref: "#/components/schemas/ScheduleResource"
                 
   /editions/{year}/organizers:
     get:
@@ -352,6 +342,39 @@ components:
             pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
             format: url
 
+    YearResource:
+      type: object
+      required:
+        - id
+        - year
+        - title
+        - slogan
+        - description
+        - start_date
+        - end_date
+        - google_calendar_url
+      properties:
+        id:
+          $ref: "#/components/schemas/IdResource"
+        year:
+          type: integer
+          example: 2020
+        title:
+          type: string
+          example: Try IT! 2020
+        slogan:
+          type: string
+        description:
+          type: string
+        start_date:
+          $ref: "#/components/schemas/DateResource"
+        end_date:
+          $ref: "#/components/schemas/DateResource"
+        google_calendar_url:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+
     # TICKET
     TicketResource:
       type: object
@@ -420,103 +443,6 @@ components:
     IdResource:
       type: integer
       example: 812
-
-    # Event
-    EventsResource:
-      type: array
-      items:
-        type: object
-        required:
-          - id
-          - name
-          - description
-          - image
-          - poster
-          - registration
-        properties:
-          id:
-            $ref: "#/components/schemas/IdResource"
-          name:
-            type: string
-            example: Awesome name
-          description:
-            type: string
-            example: Awesome description
-          image:
-            type: string
-            pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
-            format: url
-            example: "https://www.image.com/"
-          poster:
-            type: string
-            pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
-            format: url
-            example: "https://www.image.com/"
-          registration:
-            type: boolean
-            example: True
-
-    EventGetResource:
-      type: object
-      required:
-        - name
-        - description
-        - time_slots
-        - registration
-        - capacity
-      properties:
-        id:
-          $ref: "#/components/schemas/IdResource"
-        name:
-          type: string
-          example: Awesome name
-        description:
-          type: string
-          example: Awesome description
-        registration:
-          type: boolean
-          example: True
-        form:
-          type: object
-          required:
-            - registration_type
-            - maximum_choices
-          properties:
-            registration_type:
-              type: string
-              example: "time_period | groups"
-            maximum_choices:
-              type: integer
-              example: "1 | 0"
-        time_slots:
-          type: array
-          items:
-            required:
-              - date
-              - this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max
-            properties:
-              date:
-                $ref: "#/components/schemas/DateResource"
-              capacity:
-                type: integer
-                example: 10
-              ? this_is_just_a_normal_var_that_represent_the_number_of_people_already_registered_made_with_love_by_dani_and_max
-              : type: integer
-                example: 4
-
-    EventPostResource:
-      type: object
-      required:
-        - time_period
-        - identity
-      properties:
-        time_period:
-          $ref: "#/components/schemas/IdResource"
-        identity:
-          type: string
-          pattern: "[/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/|/^[A-Z0-9<]{9}[0-9]{1}[A-Z]{3}[0-9]{7}[A-Z]{1}[0-9]{7}[A-Z0-9<]{14}[0-9]{2}$/]"
-          example: 11223344K
-    # END ESCAPE ROOM
 
     StreamingResource:
       type: object
@@ -589,13 +515,81 @@ components:
               format: url
               example: "https://gitlab.com/IronMan"
     # END SPEAKER
+    ScheduleResource:
+      type: array
+      items:
+        type: object
+        required:
+          - id
+          - name
+          - description
+          - eventtype
+        properties:
+          id:
+            $ref: "#/components/schemas/IdResource"
+          name:
+            type: string
+            example: Awesome name
+          description:
+            type: string
+            example: Awesome description
+          eventtype:
+            type: string
+            pattern: "talk | workshop | activity"
+            example: talk
+
+
+     # Event
+    EventResource:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - eventtype
+      properties:
+        id:
+          $ref: "#/components/schemas/IdResource"
+        name:
+          type: string
+          example: Awesome name
+        description:
+          type: string
+          example: Awesome description
+        eventtype:
+          type: string
+          pattern: "talk | workshop | activity"
+          example: talk
+    
+    ActivityResource:
+      type: object
+      required:
+        - event
+        - image
+        - poster
+        - registration
+      properties:
+        event:
+          $ref: "#/components/schemas/EventResource"
+        image:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.image.com/"
+        poster:
+          type: string
+          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
+          format: url
+          example: "https://www.image.com/"
+        registration:
+          type: boolean
+          example: True
 
     # TALKS
     TalkResource:
       type: object
       required:
-        - title
-        - description
+        - event
         - url
         - video
         - start_date
@@ -605,12 +599,8 @@ components:
         - prize
         - speaker
       properties:
-        title:
-          type: string
-          example: How to do IT stuff
-        description:
-          type: string
-          example: Yes another talk about IT, amazing
+        event:
+          $ref: "#/components/schemas/EventResource"
         url:
           type: string
           format: url
@@ -645,18 +635,13 @@ components:
     WorkshopResource:
       type: object
       required:
-        - name
-        - description
+        - event
         - speakers
         - room
         - date
       properties:
-        name:
-          type: string
-          example: How to program in 68k assembler
-        description:
-          type: string
-          example: This workshop will help you understand low level programming.
+        event:
+          $ref: "#/components/schemas/EventResource"
         speakers:
           type: array
           items:
@@ -667,47 +652,6 @@ components:
         date:
           $ref: "#/components/schemas/DateResource"
     # END WORKSHOPS
-
-    BreakResource:
-      type: object
-      required:
-        - title
-        - start_date
-        - end_date
-      properties:
-        title:
-          type: string
-          example: How to do IT stuff
-        start_date:
-          $ref: "#/components/schemas/DateResource"
-        end_date:
-          $ref: "#/components/schemas/DateResource"
-
-    organizationResource:
-      type: object
-      required:
-        - name
-        - sponsor_type
-        - logo
-        - url
-      properties:
-        name:
-          type: string
-          example: Any organization (ie. UPM, Ubisoft, Microsoft, ...)
-        sponsor_type:
-          type: string
-          example: gold
-        logo:
-          type: string
-          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
-          format: url
-          example: "https://www.images.com/mintu"
-        url:
-          type: string
-          pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
-          format: url
-          example: "https://www.organization.com/mintu"
-    #  END Sessions
 
     # PRIZE
     PrizeResource:
@@ -807,7 +751,7 @@ components:
               items:
                 $ref: "#/components/schemas/WorkshopResource"
             events:
-              $ref: "#/components/schemas/EventsResource"
+              $ref: "#/components/schemas/EventResource"
 
     AttendanceResource:
       type: object
