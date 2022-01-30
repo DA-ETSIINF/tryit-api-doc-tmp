@@ -485,7 +485,7 @@ components:
           format: url
           example: "https://www.personalweb.com/"
         organization:
-          $ref: "#/components/schemas/organizationResource"
+          $ref: "#/components/schemas/OrganizerResource"
         social_media:
           type: object
           properties:
