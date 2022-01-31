@@ -18,8 +18,6 @@ tags:
     description: Information regarding specific editions.
   - name: Tickets
     description: Information regarding the generation and checking of tickets.
-  - name: Volunteers
-    description: Information regarding the volunteering staff for the congress.
   - name: ECTS
     description: Information regarding the calculation of ECTS for any given attendee.
   - name: Attendance
@@ -227,83 +225,109 @@ paths:
                   $ref: "#/components/schemas/OrganizerResource"
 
   /tickets:
-    post:
-      tags:
-        - Tickets
-      summary: Creates a new ticket
-      operationId: postTicket
-      description: |
-        Sends the information of the form filled by the user to the server in order to create a new ticket and send him the email with the ticket
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TicketResource"
-      responses:
-        "201":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PostSuccessResource"
-
-/ects:
-    post:
-      tags:
-        - ECTS
-      summary: Check the number of ECTS earned.
-      operationId: getECTS
-      description: |
-        The student can check the number of ECTS earned in any edition of the congress to a maximum 2 ECTS per edition).
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ECTSResource"
-      parameters:
-        - in: query
-          name: edition
-          description: Edition for which a user wants to calculate ECTS earnings
+      post:
+        tags:
+          - Tickets
+        summary: Creates a new ticket
+        operationId: postTicket
+        description: |
+          Sends the information of the form filled by the user to the server in order to create a new ticket and send him the email with the ticket. It also generates information regarding the distribution.
+        requestBody:
           required: true
-          schema:
-            type: string
-        - in: query
-          name: identity
-          description: Personal ID used by the user when the ticket was created
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PostSuccessResource"
+                $ref: "#/components/schemas/TicketResource"
+        responses:
+          "201":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/PostSuccessResource"
 
-/attendance:
-    post:
-      tags:
-        - Attendance
-      summary: Sends necessary information to register a user's attendance
-      operationId: postValidation
-      description: |
-        Sends the information in order to check attendance.
-      requestBody:
-        required: true
-        content:
-          application/json:
+  /tickets/{ticket_id}/distribution:
+      get:
+        tags:
+          - Tickets
+        summary: Gets the assigned location distribution for an attendee for a specific ticket. 
+        operationId: getDistribution
+        description: |
+          Returns the different locations (rooms / classes) to which the attendee is asigned. For example, the student has to go to room "SALON DE ACTOS" on day 1 or "5001" on day 2.
+        parameters:
+          - in: path
+            name: ticket_id
+            description: ID of the Ticket
+            required: true
             schema:
-              $ref: "#/components/schemas/AttendanceResource"
-      responses:
-        "200":
-          description: OK
+              type: integer
+              example: 75
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/LocationResource"
+
+  /ects:
+      post:
+        tags:
+          - ECTS
+        summary: Check the number of ECTS earned.
+        operationId: getECTS
+        description: |
+          The student can check the number of ECTS earned in any edition of the congress to a maximum 2 ECTS per edition).
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PostSuccessResource"
+                $ref: "#/components/schemas/ECTSResource"
+        parameters:
+          - in: query
+            name: edition
+            description: Edition for which a user wants to calculate ECTS earnings
+            required: true
+            schema:
+              type: string
+          - in: query
+            name: identity
+            description: Personal ID used by the user when the ticket was created
+            required: true
+            schema:
+              type: string
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/PostSuccessResource"
+
+  /attendance:
+      post:
+        tags:
+          - Attendance
+        summary: Sends necessary information to register a user's attendance
+        operationId: postValidation
+        description: |
+          Sends the information in order to check attendance.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceResource"
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/PostSuccessResource"
 
 components:
   schemas:
@@ -421,6 +445,7 @@ components:
           type: string
           example: "123456789"
     # END TICKET
+
     InvalidTicketResource:
       type: object
       required:
@@ -777,6 +802,27 @@ components:
         time_stamp:
           type: integer
           example: 234213414123
+    
+    LocationResource:
+      type: object
+      required:
+        - days
+        - rooms
+        - ticket_id
+      properties:
+        days:
+          type: array
+          items:
+            type: integer
+            example: 1
+        rooms:
+          type: array
+          items:
+            type: string
+            example: "Salon de Actos"
+        ticket_id:
+          type: integer
+          example: 75
 
     OrganizerResource:
       required:
@@ -804,6 +850,7 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.image.com/"
+
     PostSuccessResource:
       type: object
       required:
