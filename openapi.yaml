@@ -18,8 +18,8 @@ tags:
     description: Information regarding specific editions.
   - name: Tickets
     description: Information regarding the generation and checking of tickets.
-  - name: ECTS
-    description: Information regarding the calculation of ECTS for any given attendee.
+  - name: Awards
+    description: Information regarding the different awards.
   - name: Attendance
     description: Information regarding attendance.
 
@@ -65,7 +65,15 @@ paths:
       summary: Returns a JSON object with info about a specific edition.
       operationId: getYearEdition
       description: |
-        Returns a JSON object with all editions.
+        Returns a JSON object with information regarding a specific edition
+      parameters:
+      - in: path
+        name: year
+        description: Year of the edition
+        required: true
+        schema:
+          type: integer
+          example: 2020
       responses:
         "200":
           description: OK
@@ -224,6 +232,38 @@ paths:
                 items:
                   $ref: "#/components/schemas/OrganizerResource"
 
+  /editions/{year}/ects/{nif}:
+    get:
+      tags:
+        - Editions
+      summary: Returns the amount of ECTS a student obtains
+      operationId: getECTS
+      description: |
+        Returns the list of all the organizers
+      parameters:
+        - in: path
+          name: year
+          description: Year of the edition
+          required: true
+          schema:
+            type: integer
+            example: 2020
+        - in: path
+          name: nif
+          description: NIF of the student
+          required: true
+          schema:
+            type: string
+            example: X255555T
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: number
+                example: 1.5
+  
   /tickets:
       post:
         tags:
@@ -272,40 +312,36 @@ paths:
                   items:
                     $ref: "#/components/schemas/LocationResource"
 
-  /ects:
-      post:
+  /prizes:
+      get:
         tags:
-          - ECTS
-        summary: Check the number of ECTS earned.
-        operationId: getECTS
+          - Awards
+        summary: From a specified prize scenario, returns an attendee's NIF. (INFO - SENDING ENTIRE PRIZERESOURCE BUT THAT IS NOT NECESSARY)
+        operationId: getPrize
         description: |
-          The student can check the number of ECTS earned in any edition of the congress to a maximum 2 ECTS per edition).
+          It generates a winner for the specified raffle. If a prize is selected, it uses that one. Otherwise (no request body json object), it chooses a random one from a pre-established pool of prizes.
+        parameters:
+          - in: query
+            name: is_global_raffle
+            description: If false, it indicates that the raffle is for a single event (talk, workshop, ...). If true, it indicates that it has to take into consideration the assistance to all events in the congress.
+            required: true
+            schema:
+              type: boolean
+              example: false
         requestBody:
-          required: true
+          required: false
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ECTSResource"
-        parameters:
-          - in: query
-            name: edition
-            description: Edition for which a user wants to calculate ECTS earnings
-            required: true
-            schema:
-              type: string
-          - in: query
-            name: identity
-            description: Personal ID used by the user when the ticket was created
-            required: true
-            schema:
-              type: string
+                $ref: "#/components/schemas/PrizeResource"
         responses:
           "200":
             description: OK
             content:
               application/json:
                 schema:
-                  $ref: "#/components/schemas/PostSuccessResource"
+                  type: string
+                  example: 12345678A
 
   /attendance:
       post:
@@ -621,7 +657,6 @@ components:
         - end_date
         - slide
         - room
-        - prize
         - speaker
       properties:
         event:
@@ -648,8 +683,6 @@ components:
         room:
           type: string
           example: dark room
-        prize:
-          $ref: "#/components/schemas/PrizeResource"
         speakers:
           type: array
           items:
@@ -685,6 +718,7 @@ components:
         - name
         - description
         - image
+        - value
       properties:
         name:
           type: string
@@ -697,6 +731,9 @@ components:
           pattern: http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[\/.?&+!*=\-])+(?![^,!;:\s)])
           format: url
           example: "https://www.images.com/iron_man"
+        value:
+          type: number
+          example: 199.99
     # END PRIZE
 
     # SPONSORS
@@ -744,39 +781,6 @@ components:
           format: url
           example: "https://www.organization.com/"
     # END SPONSORS
-
-    ECTSResource:
-      type: object
-      required:
-        - edition
-        - n_talks
-        - attended_to
-      properties:
-        edition:
-          type: integer
-          minimum: 1
-          example: 2019
-        n_talks:
-          type: integer
-          minimum: 1
-          example: 27
-        attended_to:
-          type: object
-          required:
-            - talks
-            - workshops
-            - events
-          properties:
-            talks:
-              type: array
-              items:
-                $ref: "#/components/schemas/TalkResource"
-            workshops:
-              type: array
-              items:
-                $ref: "#/components/schemas/WorkshopResource"
-            events:
-              $ref: "#/components/schemas/EventResource"
 
     AttendanceResource:
       type: object
